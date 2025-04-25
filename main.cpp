@@ -4,7 +4,8 @@
 
 using namespace std;
 
-struct Tap {
+struct Tap 
+{
     int port_count;
     int tap_value_db;
     double insertion_loss;
@@ -12,7 +13,8 @@ struct Tap {
     bool is_terminating;
 };
 
-vector<Tap> populateTaps() {
+vector<Tap> populateTaps() 
+{
     vector<Tap> taps = {
         // 2-port taps
         {2, 21, 0.40, 21.95, false},
@@ -48,7 +50,8 @@ vector<Tap> populateTaps() {
     return taps;
 }
 
-void LightTable(const vector<Tap>& taps) {
+void LightTable(const vector<Tap>& taps) 
+{
     cout << "Light Loss Table:\n";
     cout << "Ports | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating\n";
     cout << "----------------------------------------------------------------------------------\n";
@@ -102,7 +105,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
         int choice;
         cout << "Choose tap: ";
         cin >> choice;
-        if (choice < 1 || choice > available.size()) {
+        if (choice < 1 || choice > available.size()) 
+        {
             cout << "Invalid! Retry.\n";
             --i;
             continue;
