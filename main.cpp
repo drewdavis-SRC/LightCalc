@@ -7,7 +7,7 @@ using namespace std;
 struct Tap {
     int port_count;
     int tap_value_db;
-    double insertion_loss;  // Now only stores MAX insertion loss
+    double insertion_loss;
     double max_drop_loss;
     bool is_terminating;
 };
@@ -65,7 +65,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
     cout << "Enter number of taps in chain: ";
     cin >> num_taps;
 
-    for (int i = 0; i < num_taps; ++i) {
+    for (int i = 0; i < num_taps; ++i)
+    {
         bool is_last = (i == num_taps - 1);
         cout << "\nTap " << i+1 << "/" << num_taps << ":\n";
         
