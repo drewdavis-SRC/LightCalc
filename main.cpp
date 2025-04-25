@@ -75,12 +75,16 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
         cout << "Enter port count (2/4/8): ";
         cin >> port_count;
         vector<Tap> available;
-        for (const Tap& t : all_taps) {
-            if (t.port_count == port_count && t.is_terminating == is_last)
+        for (const Tap& t : all_taps) 
+        {
+            if (t.port_count == port_count)
+            {
                 available.push_back(t);
+            }
         }
 
-        if (available.empty()) {
+        if (available.empty()) 
+        {
             cout << "No valid taps! Retry.\n";
             --i;
             continue;
@@ -88,7 +92,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 
         // Display options
         cout << "Available taps:\n";
-        for (size_t j = 0; j < available.size(); ++j) {
+        for (size_t j = 0; j < available.size(); ++j) 
+        {
             cout << j+1 << ". " << available[j].tap_value_db << " dB (Max Insertion: " 
                  << available[j].insertion_loss << " dB)\n";
         }
@@ -138,7 +143,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     vector<Tap> available;
     for (const Tap& t : all_taps) 
     {
-        if (t.port_count == port_count && t.is_terminating == inserting_at_end)
+        if (t.port_count == port_count)
         {
             available.push_back(t);
         }
