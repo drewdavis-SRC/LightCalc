@@ -120,7 +120,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
 
     // Get position
     int position;
-    cout << "Insert position (1-" << chain.size()+1 << "): ";
+    cout << "\nInsert position (1-" << chain.size()+1 << "): ";
     cin >> position;
 
     if (position < 1 || position > chain.size()+1) 
@@ -197,9 +197,19 @@ void ViewChain(const vector<Tap>& chain) {
     {
         const Tap& t = chain[i];
 
-        cout << i+1 << "   | " << t.port_count << "     | " << t.tap_value_db 
-             << " dB  | " << t.insertion_loss << " dB           | "
-             << t.max_drop_loss << " dB           | " << (t.is_terminating ? "Yes" : "No") << endl;
+        for (const Tap& t : chain)
+        {
+            cout << t.port_count;
+            cout << "     | ";
+            cout << t.tap_value_db;
+            cout << " dB          | ";
+            cout << t.insertion_loss;
+            cout << " dB                  | ";
+            cout << t.max_drop_loss;
+            cout << " dB           | ";
+            cout << (t.is_terminating ? "Yes" : "No");
+            cout << endl;
+        }
     }
 }
 
@@ -225,15 +235,14 @@ void LightTable (const vector <Tap>& tap)
 
     for (const Tap& t : tap)
     {
-        cout << "   ";
         cout << t.port_count;
-        cout << "  |      ";
+        cout << "     | ";
         cout << t.tap_value_db;
-        cout << "        |           ";
+        cout << " dB          | ";
         cout << t.insertion_loss;
-        cout << "           |         ";
+        cout << " dB                  | ";
         cout << t.max_drop_loss;
-        cout << "       | ";
+        cout << " dB           | ";
         cout << (t.is_terminating ? "Yes" : "No");
         cout << endl;
     }
