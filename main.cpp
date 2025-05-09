@@ -97,7 +97,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
         cout << "Available taps:\n";
         for (size_t j = 0; j < available.size(); ++j) 
         {
-            cout << j+1 << ". " << available[j].tap_value_db << " dB (Max Insertion: " 
+            cout << j+1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
                  << available[j].insertion_loss << " dB)\n";
         }
 
