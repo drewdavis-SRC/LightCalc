@@ -55,13 +55,13 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
     vector<Tap> chain;
     int num_taps;
 
-    cout << "Enter number of taps in chain: ";
+    cout << "\nEnter number of taps in chain: ";
     cin >> num_taps;
 
     for (int i = 0; i < num_taps; i++)
     {
         bool is_last = (i == num_taps - 1);
-        cout << "\nTap " << i+1 << "/" << num_taps << ":\n";
+        cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
         
         // Select port count
         int port_count;
@@ -95,7 +95,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 
         // Get selection
         int choice;
-        
+
         cout << "Choose tap: ";
         cin >> choice;
 
@@ -211,7 +211,7 @@ double CalculateLoss(const vector<Tap>& chain) {
     {
         if (!t.is_terminating)
         {
-            total += t.insertion_loss;
+            total += t.insertion_loss + t.max_drop_loss;
         }
     }
     return total;
@@ -220,19 +220,21 @@ double CalculateLoss(const vector<Tap>& chain) {
 void LightTable (const vector <Tap>& tap)
 {
     cout << "\nLight Loss Table:" << endl;
-    cout << "Ports | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB)" << endl;
-    cout << "---------------------------------------------------------------------\n";
+    cout << "Ports | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << endl;
+    cout << "-----------------------------------------------------------------------------------\n";
 
     for (const Tap& t : tap)
     {
-        cout <<  "   ";
+        cout << "   ";
         cout << t.port_count;
-        cout <<  "  |      ";
+        cout << "  |      ";
         cout << t.tap_value_db;
-        cout <<  "        |           ";
+        cout << "        |           ";
         cout << t.insertion_loss;
-        cout <<  "           |         ";
+        cout << "           |         ";
         cout << t.max_drop_loss;
+        cout << "       | ";
+        cout << (t.is_terminating ? "Yes" : "No");
         cout << endl;
     }
 }
@@ -246,14 +248,14 @@ int main ()
 
     do 
     {
-        cout << "\n===== FTTH Tap Calculator =====\n"
+        cout << "\n===== FTTH Tap Calculator Menu =====\n"
              << "1. Create New Chain\n"
              << "2. Insert Tap into Chain\n"
              << "3. View Light Loss Table\n"
              << "4. View Current Chain\n"
              << "5. Calculate Total Loss\n"
              << "6. Exit\n"
-             << "Choice: ";
+             << "\nChoice: ";
         
         cin >> choice;
         
