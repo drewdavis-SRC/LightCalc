@@ -197,19 +197,16 @@ void ViewChain(const vector<Tap>& chain) {
     {
         const Tap& t = chain[i];
 
-        for (const Tap& t : chain)
-        {
-            cout << t.port_count;
-            cout << "     | ";
-            cout << t.tap_value_db;
-            cout << " dB          | ";
-            cout << t.insertion_loss;
-            cout << " dB                  | ";
-            cout << t.max_drop_loss;
-            cout << " dB           | ";
-            cout << (t.is_terminating ? "Yes" : "No");
-            cout << endl;
-        }
+        cout << t.port_count;
+        cout << "     | ";
+        cout << t.tap_value_db;
+        cout << " dB          | ";
+        cout << t.insertion_loss;
+        cout << " dB                  | ";
+        cout << t.max_drop_loss;
+        cout << " dB           | ";
+        cout << (t.is_terminating ? "Yes" : "No");
+        cout << endl;
     }
 }
 
@@ -221,7 +218,7 @@ double CalculateLoss(const vector<Tap>& chain) {
     {
         if (!t.is_terminating)
         {
-            total += t.insertion_loss + t.max_drop_loss;
+            total += t.insertion_loss;
         }
     }
     return total;
