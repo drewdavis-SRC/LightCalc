@@ -52,8 +52,24 @@ vector<Tap> populateTaps()
 
 vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 
+    cout << "\n=======================";
+    cout << "\nChain creation selected";
+    cout << "\n=======================";
+
     vector<Tap> chain;
     int num_taps;
+
+    float main_light_level;
+    cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
+    cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
+    cout << "\nEnter the main line light level: ";
+    cin >> main_light_level;
+
+    if (main_light_level > 3.00 || main_light_level < 1.00)
+    {
+        cout << "\nYou've entered a number outside of the recommended range.\n";
+        cout << "The program will continue. This is just a reminder.\n";
+    }
 
     cout << "\nEnter number of taps in chain: ";
     cin >> num_taps;
@@ -117,6 +133,10 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
         cout << "\nChain is empty! Create one first.\n";
         return;
     }
+
+    cout << "\n=======================";
+    cout << "\nTap insertion selected";
+    cout << "\n=======================";
 
     // Get position
     int position;
@@ -189,6 +209,10 @@ void ViewChain(const vector<Tap>& chain) {
         return;
     }
 
+    cout << "\n=======================";
+    cout << "\nChain viewing selected";
+    cout << "\n=======================";
+
     cout << "\nCurrent Chain:\n";
     cout << "Pos | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
     cout << "----------------------------------------------------------------------------\n";
@@ -212,6 +236,10 @@ void ViewChain(const vector<Tap>& chain) {
 
 double CalculateLoss(const vector<Tap>& chain) {
 
+    cout << "\n===============================";
+    cout << "\nTotal loss calculaiton selected";
+    cout << "\n===============================";
+
     double total = 0.0;
 
     for (const Tap& t : chain) 
@@ -221,11 +249,18 @@ double CalculateLoss(const vector<Tap>& chain) {
             total += t.insertion_loss;
         }
     }
+
+    cout << "\nTotal Insertion Loss: ";
+
     return total;
 }
 
 void LightTable (const vector <Tap>& tap)
 {
+    cout << "\n=========================";
+    cout << "\nLight Table view selected";
+    cout << "\n=========================";
+
     cout << "\nLight Loss Table:" << endl;
     cout << "Ports | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << endl;
     cout << "-----------------------------------------------------------------------------------\n";
@@ -261,6 +296,7 @@ int main ()
              << "4. View Current Chain\n"
              << "5. Calculate Total Loss\n"
              << "6. Exit\n"
+             << "====================================\n"
              << "\nChoice: ";
         
         cin >> choice;
@@ -287,7 +323,7 @@ int main ()
 
         else if (choice == 5)
         {
-            cout << "\nTotal Insertion Loss: " << CalculateLoss(current_chain) << " dB\n";
+            cout << CalculateLoss(current_chain) << " dB\n";
         }
 
         else if (choice == 6)
