@@ -58,12 +58,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 
     vector<Tap> chain;
     int num_taps;
-
     float main_light_level;
-    cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
-    cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
-    cout << "\nEnter the main line light level: ";
-    cin >> main_light_level;
 
     if (main_light_level > 3.00 || main_light_level < 1.00)
     {
@@ -286,6 +281,12 @@ int main ()
     vector<Tap> current_chain;
 
     int choice;
+
+    float main_light_level;
+    cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
+    cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
+    cout << "\nEnter the main line light level: ";
+    cin >> main_light_level;
 
     do 
     {
