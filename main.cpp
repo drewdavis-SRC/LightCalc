@@ -281,13 +281,7 @@ int main ()
     cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
     cout << "\nEnter the main line light level: ";
     cin >> main_light_level;
-
-    if (main_light_level > 3.00 || main_light_level < 1.00)
-    {
-        cout << "\nYou've entered a number outside of the recommended range.\n";
-        cout << "The program will continue. This is just a reminder.\n";
-    }
-
+    
     do 
     {
         cout << "\n===== FTTH Tap Calculator Menu =====\n"
