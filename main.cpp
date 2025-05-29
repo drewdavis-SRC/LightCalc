@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stdio.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -52,27 +54,27 @@ vector<Tap> populateTaps()
 
 vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 
-    cout << "\n=======================";
-    cout << "\nChain creation selected";
-    cout << "\n=======================";
+    std::cout << "\n=======================";
+    std::cout << "\nChain creation selected";
+    std::cout << "\n=======================";
 
     vector<Tap> chain;
     int num_taps;
     float main_light_level;
 
-    cout << "\nEnter number of taps in chain: ";
-    cin >> num_taps;
+    std::cout << "\nEnter number of taps in chain: ";
+    std::cin >> num_taps;
 
     for (int i = 0; i < num_taps; i++)
     {
         bool is_last = (i == num_taps - 1);
-        cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
+        std::cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
         
         // Select port count
         int port_count;
 
-        cout << "Enter port count (2/4/8): ";
-        cin >> port_count;
+        std::cout << "Enter port count (2/4/8): ";
+        std::cin >> port_count;
         
         vector<Tap> available;
         for (const Tap& t : all_taps) 
@@ -85,28 +87,28 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 
         if (available.empty()) 
         {
-            cout << "No valid taps! Retry.\n";
+            std::cout << "No valid taps! Retry.\n";
             i--;
             continue;
         }
 
         // Display options
-        cout << "Available taps:\n";
+        std::cout << "Available taps:\n";
         for (size_t j = 0; j < available.size(); j++) 
         {
-            cout << j+1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
+            std::cout << j+1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
                  << available[j].insertion_loss << " dB)\n";
         }
 
         // Get selection
         int choice;
 
-        cout << "Choose tap: ";
-        cin >> choice;
+        std::cout << "Choose tap: ";
+        std::cin >> choice;
 
         if (choice < 1 || choice > available.size()) 
         {
-            cout << "Invalid! Retry.\n";
+            std::cout << "Invalid! Retry.\n";
             i--;
             continue;
         }
@@ -119,22 +121,22 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     if (chain.empty()) 
     {
-        cout << "\nChain is empty! Create one first.\n";
+        std::cout << "\nChain is empty! Create one first.\n";
         return;
     }
 
-    cout << "\n=======================";
-    cout << "\nTap insertion selected";
-    cout << "\n=======================";
+    std::cout << "\n=======================";
+    std::cout << "\nTap insertion selected";
+    std::cout << "\n=======================";
 
     // Get position
     int position;
-    cout << "\nInsert position (1-" << chain.size()+1 << "): ";
-    cin >> position;
+    std::cout << "\nInsert position (1-" << chain.size()+1 << "): ";
+    std::cin >> position;
 
     if (position < 1 || position > chain.size()+1) 
     {
-        cout << "Invalid position!\n";
+        std::cout << "Invalid position!\n";
         return;
     }
     position--; // Convert to 0-based index
@@ -143,8 +145,8 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
 
     // Get port count
     int port_count;
-    cout << "Port count (2/4/8): ";
-    cin >> port_count;
+    std::cout << "Port count (2/4/8): ";
+    std::cin >> port_count;
 
     // Filter available taps
     vector<Tap> available;
@@ -158,24 +160,24 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
 
     if (available.empty()) 
     {
-        cout << "No valid taps!\n";
+        std::cout << "No valid taps!\n";
         return;
     }
 
     // Select tap
-    cout << "Available taps:\n";
+    std::cout << "Available taps:\n";
     for (size_t i = 0; i < available.size(); i++) 
     {
-        cout << i+1 << ". " << available[i].tap_value_db << " dB\n";
+        std::cout << i+1 << ". " << available[i].tap_value_db << " dB\n";
     }
 
     int choice;
-    cout << "Choose tap: ";
+    std::cout << "Choose tap: ";
 
-    cin >> choice;
+    std::cin >> choice;
     if (choice < 1 || choice > available.size()) 
     {
-        cout << "Invalid!\n";
+        std::cout << "Invalid!\n";
         return;
     }
     Tap new_tap = available[choice-1];
@@ -188,46 +190,46 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     // Insert new tap
     chain.insert(chain.begin() + position, new_tap);
 
-    cout << "Tap inserted successfully!\n";
+    std::cout << "Tap inserted successfully!\n";
 }
 
 void ViewChain(const vector<Tap>& chain) {
     if (chain.empty()) 
     {
-        cout << "\nChain is empty!\n";
+        std::cout << "\nChain is empty!\n";
         return;
     }
 
-    cout << "\n=======================";
-    cout << "\nChain viewing selected";
-    cout << "\n=======================";
+    std::cout << "\n=======================";
+    std::cout << "\nChain viewing selected";
+    std::cout << "\n=======================";
 
-    cout << "\nCurrent Chain:\n";
-    cout << "Pos | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
-    cout << "----------------------------------------------------------------------------\n";
+    std::cout << "\nCurrent Chain:\n";
+    std::cout << "Pos | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
+    std::cout << "----------------------------------------------------------------------------\n";
     
     for (size_t i = 0; i < chain.size(); i++) 
     {
         const Tap& t = chain[i];
 
-        cout << t.port_count;
-        cout << "     | ";
-        cout << t.tap_value_db;
-        cout << " dB          | ";
-        cout << t.insertion_loss;
-        cout << " dB                  | ";
-        cout << t.max_drop_loss;
-        cout << " dB           | ";
-        cout << (t.is_terminating ? "Yes" : "No");
-        cout << endl;
+        std::cout << t.port_count;
+        std::cout << "     | ";
+        std::cout << t.tap_value_db;
+        std::cout << " dB          | ";
+        std::cout << t.insertion_loss;
+        std::cout << " dB                  | ";
+        std::cout << t.max_drop_loss;
+        std::cout << " dB           | ";
+        std::cout << (t.is_terminating ? "Yes" : "No");
+        std::cout << endl;
     }
 }
 
 double CalculateLoss(const vector<Tap>& chain) {
 
-    cout << "\n===============================";
-    cout << "\nTotal loss calculaiton selected";
-    cout << "\n===============================";
+    std::cout << "\n===============================";
+    std::cout << "\nTotal loss calculaiton selected";
+    std::cout << "\n===============================";
 
     double total = 0.0;
 
@@ -239,33 +241,33 @@ double CalculateLoss(const vector<Tap>& chain) {
         }
     }
 
-    cout << "\nTotal Insertion Loss: ";
+    std::cout << "\nTotal Insertion Loss: ";
 
     return total;
 }
 
 void LightTable (const vector <Tap>& tap)
 {
-    cout << "\n=========================";
-    cout << "\nLight Table view selected";
-    cout << "\n=========================";
+    std::cout << "\n=========================";
+    std::cout << "\nLight Table view selected";
+    std::cout << "\n=========================";
 
-    cout << "\nLight Loss Table:" << endl;
-    cout << "Ports | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << endl;
-    cout << "-----------------------------------------------------------------------------------\n";
+    std::cout << "\nLight Loss Table:" << endl;
+    std::cout << "Ports | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << endl;
+    std::cout << "-----------------------------------------------------------------------------------\n";
 
     for (const Tap& t : tap)
     {
-        cout << t.port_count;
-        cout << "     | ";
-        cout << t.tap_value_db;
-        cout << " dB          | ";
-        cout << t.insertion_loss;
-        cout << " dB                  | ";
-        cout << t.max_drop_loss;
-        cout << " dB           | ";
-        cout << (t.is_terminating ? "Yes" : "No");
-        cout << endl;
+        std::cout << t.port_count;
+        std::cout << "     | ";
+        std::cout << t.tap_value_db;
+        std::cout << " dB          | ";
+        std::cout << t.insertion_loss;
+        std::cout << " dB                  | ";
+        std::cout << t.max_drop_loss;
+        std::cout << " dB           | ";
+        std::cout << (t.is_terminating ? "Yes" : "No");
+        std::cout << endl;
     }
 }
 
@@ -277,24 +279,32 @@ int main ()
     int choice;
 
     float main_light_level;
-    cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
-    cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
-    cout << "\nEnter the main line light level: ";
-    cin >> main_light_level;
+    std::cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
+    std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
+    std::cout << "\nEnter the main line light level: ";
+    std::cin >> main_light_level;
+
+    std::cout << "\nProceeding to calculator menu.";
+    sleep(1);
+    std::cout << ".";
+    sleep(1);
+    std::cout << ".";
+    sleep(1);
     
     do 
     {
-        cout << "\n===== FTTH Tap Calculator Menu =====\n"
+        std::cout << "\n\n===== FTTH Tap Calculator Menu =====\n"
              << "1. Create New Chain\n"
              << "2. Insert Tap into Chain\n"
              << "3. View Light Loss Table\n"
              << "4. View Current Chain\n"
              << "5. Calculate Total Loss\n"
-             << "6. Exit\n"
+             << "6. Clear Current Chain\n"
+             << "7. Exit\n"
              << "====================================\n"
              << "\nChoice: ";
         
-        cin >> choice;
+        std::cin >> choice;
         
         if (choice == 1)
         {
@@ -318,20 +328,46 @@ int main ()
 
         else if (choice == 5)
         {
-            cout << CalculateLoss(current_chain) << " dB\n";
+            std::cout << CalculateLoss(current_chain) << " dB\n";
         }
 
         else if (choice == 6)
         {
-            cout << "\nExiting...\n";
+            std::cout << "\n" << current_chain.size() << " taps found.\n";
+
+            cout << "Deleting.";
+            sleep(1);
+            cout << ".";
+            sleep(1);
+            cout << ".";
+            sleep(1);
+            cout << ".";
+
+            for (int i = 0; i <= current_chain.size(); i++)
+            {
+                current_chain.pop_back();
+            }
+
+            std::cout << "\nChain is now clear.\n";
+            std::cout << "\nProceeding back to calculator menu.";
+            sleep(1);
+            std::cout << ".";
+            sleep(1);
+            std::cout << ".";
+            sleep(1);
+        }
+
+        else if (choice == 7)
+        {
+            std::cout << "\nExiting...\n";
         }
 
         else
         {
-            cout << "\nInvalid choice!\n";
+            std::cout << "\nInvalid choice!\n";
         }
 
-    } while (choice != 6);
+    } while (choice != 7);
 
     return 0;
 }
