@@ -195,7 +195,6 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     std::cout << ".";
     sleep(1);
     std::cout << ".";
-    sleep(1);
 }
 
 void ViewChain(const vector<Tap>& chain, float main_light_level) {
@@ -343,16 +342,12 @@ int main ()
             std::cout << "\n" << current_chain.size() << " taps found.\n";
 
             cout << "Deleting.";
-            sleep(1);
-            cout << ".";
-            sleep(1);
-            cout << ".";
-            sleep(1);
-            cout << ".";
 
             for (int i = 0; i <= current_chain.size(); i++)
             {
                 current_chain.pop_back();
+                sleep(1);
+                cout << ".";
             }
 
             std::cout << "\nChain is now clear.\n";
@@ -361,7 +356,6 @@ int main ()
             std::cout << ".";
             sleep(1);
             std::cout << ".";
-            sleep(1);
         }
 
         else if (choice == 7)
