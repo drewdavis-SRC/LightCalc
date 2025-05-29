@@ -191,6 +191,12 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     chain.insert(chain.begin() + position, new_tap);
 
     std::cout << "Tap inserted successfully!\n";
+    std::cout << "\nProceeding back to calculator menu.";
+    sleep(1);
+    std::cout << ".";
+    sleep(1);
+    std::cout << ".";
+    sleep(1);
 }
 
 void ViewChain(const vector<Tap>& chain) {
@@ -302,7 +308,7 @@ int main ()
              << "6. Clear Current Chain\n"
              << "7. Exit\n"
              << "====================================\n"
-             << "\nChoice: ";
+             << "\nEnter your choice: ";
         
         std::cin >> choice;
         
@@ -371,3 +377,22 @@ int main ()
 
     return 0;
 }
+
+/*
+Notes:
+
+Issues:
+    Insertion is replacing a current tap instead of inserting in between
+
+Things to add:
+    High Priority:
+        Main line light level
+        Light level at drops
+        Main line light level changing from tap to tap based off the table
+        Light level at drops chagning based off the table
+        Main line and drop light levels changing when tap inserted
+    
+    Low priority:
+        Reseting/clearing terminal to show only what is being dealt with
+            IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
+*/
