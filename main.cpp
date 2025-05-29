@@ -103,7 +103,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
         // Get selection
         int choice;
 
-        std::cout << "Choose tap: ";
+        std::cout << "\nChoose tap: ";
         std::cin >> choice;
 
         if (choice < 1 || choice > available.size()) 
@@ -172,7 +172,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     }
 
     int choice;
-    std::cout << "Choose tap: ";
+    std::cout << "\nChoose tap: ";
 
     std::cin >> choice;
     if (choice < 1 || choice > available.size()) 
@@ -199,7 +199,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     sleep(1);
 }
 
-void ViewChain(const vector<Tap>& chain) {
+void ViewChain(const vector<Tap>& chain, float main_light_level) {
     if (chain.empty()) 
     {
         std::cout << "\nChain is empty!\n";
@@ -218,6 +218,8 @@ void ViewChain(const vector<Tap>& chain) {
     {
         const Tap& t = chain[i];
 
+        std::cout << i;
+        std::cout << "   |";
         std::cout << t.port_count;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
@@ -228,6 +230,13 @@ void ViewChain(const vector<Tap>& chain) {
         std::cout << " dB           | ";
         std::cout << (t.is_terminating ? "Yes" : "No");
         std::cout << endl;
+    }
+
+    for (int i = 0; i < chain.size(); i++)
+    {
+        const Tap& t = chain[i];
+
+        std::cout << "\nLight Levels at tap " << i << "'s drop: " << main_light_level - t.max_drop_loss;
     }
 }
 
@@ -329,7 +338,7 @@ int main ()
 
         else if (choice == 4)
         {
-            ViewChain(current_chain);
+            ViewChain(current_chain, main_light_level);
         }
 
         else if (choice == 5)
@@ -386,11 +395,12 @@ Issues:
 
 Things to add:
     High Priority:
-        Main line light level
-        Light level at drops
+        Main line light level prompt (done)
+        Light level at drops (done)
         Main line light level changing from tap to tap based off the table
-        Light level at drops chagning based off the table
+        Light level at drops chagning based off the table (done)
         Main line and drop light levels changing when tap inserted
+        Rework loss calculation
     
     Low priority:
         Reseting/clearing terminal to show only what is being dealt with
