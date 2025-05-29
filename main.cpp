@@ -10,7 +10,7 @@ struct Tap
 {
     int port_count;
     int tap_value_db;
-    double insertion_loss;
+    double max_insertion_loss;
     double max_drop_loss;
     bool is_terminating;
 };
@@ -55,12 +55,11 @@ vector<Tap> populateTaps()
 vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 
     std::cout << "\n=======================";
-    std::cout << "\nChain creation selected";
+    std::cout << "\nChain Creation Selected";
     std::cout << "\n=======================";
 
     vector<Tap> chain;
     int num_taps;
-    float main_light_level;
 
     std::cout << "\nEnter number of taps in chain: ";
     std::cin >> num_taps;
@@ -97,7 +96,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
         for (size_t j = 0; j < available.size(); j++) 
         {
             std::cout << j+1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
-                 << available[j].insertion_loss << " dB)\n";
+                 << available[j].max_insertion_loss << " dB)\n";
         }
 
         // Get selection
@@ -119,14 +118,14 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
 }
 
 void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
-    if (chain.empty()) 
+    if (chain.empty())
     {
         std::cout << "\nChain is empty! Create one first.\n";
         return;
     }
 
     std::cout << "\n=======================";
-    std::cout << "\nTap insertion selected";
+    std::cout << "\nTap Insertion Selected";
     std::cout << "\n=======================";
 
     // Get position
@@ -207,61 +206,54 @@ void ViewChain(const vector<Tap>& chain, float main_light_level) {
     }
 
     std::cout << "\n=======================";
-    std::cout << "\nChain viewing selected";
+    std::cout << "\nChain View Selected";
     std::cout << "\n=======================";
 
     std::cout << "\nCurrent Chain:\n";
-    std::cout << "Pos | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
+    std::cout << "Position | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
     std::cout << "----------------------------------------------------------------------------\n";
     
     for (size_t i = 0; i < chain.size(); i++) 
     {
         const Tap& t = chain[i];
 
-        std::cout << i;
-        std::cout << "   |";
+        std::cout << i + 1;
+        std::cout << "        | ";
         std::cout << t.port_count;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
-        std::cout << " dB          | ";
-        std::cout << t.insertion_loss;
-        std::cout << " dB                  | ";
+        std::cout << " dB    | ";
+        std::cout << t.max_insertion_loss;
+        std::cout << " dB            | ";
         std::cout << t.max_drop_loss;
         std::cout << " dB           | ";
         std::cout << (t.is_terminating ? "Yes" : "No");
         std::cout << endl;
     }
+}
+
+void CalculateLoss(const vector<Tap>& chain, float main_light_level) {
+
+    std::cout << "\n===============================";
+    std::cout << "\nLight Loss Calculaiton selected";
+    std::cout << "\n===============================";
 
     for (int i = 0; i < chain.size(); i++)
     {
         const Tap& t = chain[i];
 
-        std::cout << "\nLight Levels at tap " << i << "'s drop: " << main_light_level - t.max_drop_loss;
+        cout << "\nMain light level going into tap " << i + 1 << " of the chain: " << main_light_level;
+        std::cout << "\nLight Level at tap " << i + 1 << "'s drops: " << main_light_level - t.max_drop_loss;
+
+        float temp = main_light_level;
+        temp = temp - t.max_insertion_loss;
+        main_light_level = temp;
+
+        cout << endl;
     }
 }
 
-double CalculateLoss(const vector<Tap>& chain) {
-
-    std::cout << "\n===============================";
-    std::cout << "\nTotal loss calculaiton selected";
-    std::cout << "\n===============================";
-
-    double total = 0.0;
-
-    for (const Tap& t : chain) 
-    {
-        if (!t.is_terminating)
-        {
-            total += t.insertion_loss;
-        }
-    }
-
-    std::cout << "\nTotal Insertion Loss: ";
-
-    return total;
-}
-
-void LightTable (const vector <Tap>& tap)
+void LightTable (const vector <Tap>& chain)
 {
     std::cout << "\n=========================";
     std::cout << "\nLight Table view selected";
@@ -271,13 +263,13 @@ void LightTable (const vector <Tap>& tap)
     std::cout << "Ports | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << endl;
     std::cout << "-----------------------------------------------------------------------------------\n";
 
-    for (const Tap& t : tap)
+    for (const Tap& t : chain)
     {
         std::cout << t.port_count;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
         std::cout << " dB          | ";
-        std::cout << t.insertion_loss;
+        std::cout << t.max_insertion_loss;
         std::cout << " dB                  | ";
         std::cout << t.max_drop_loss;
         std::cout << " dB           | ";
@@ -313,7 +305,7 @@ int main ()
              << "2. Insert Tap into Chain\n"
              << "3. View Light Loss Table\n"
              << "4. View Current Chain\n"
-             << "5. Calculate Total Loss\n"
+             << "5. Calculate Light Loss\n"
              << "6. Clear Current Chain\n"
              << "7. Exit\n"
              << "====================================\n"
@@ -343,7 +335,7 @@ int main ()
 
         else if (choice == 5)
         {
-            std::cout << CalculateLoss(current_chain) << " dB\n";
+            CalculateLoss(current_chain, main_light_level);
         }
 
         else if (choice == 6)
@@ -395,12 +387,14 @@ Issues:
 
 Things to add:
     High Priority:
+        GUI
         Main line light level prompt (done)
         Light level at drops (done)
         Main line light level changing from tap to tap based off the table
         Light level at drops chagning based off the table (done)
         Main line and drop light levels changing when tap inserted
         Rework loss calculation
+        Insertion needs to refactor light loss on the whole chain
     
     Low priority:
         Reseting/clearing terminal to show only what is being dealt with
