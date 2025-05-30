@@ -8,7 +8,7 @@ using namespace std;
 
 struct Tap 
 {
-    int tap_value;
+    int port_count;
     int tap_value_db;
     double max_insertion_loss;
     double max_drop_loss;
@@ -71,15 +71,15 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         std::cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
         
         // Select port count
-        int tap_value;
+        int port_count;
 
         std::cout << "Enter port count (2/4/8): ";
-        std::cin >> tap_value;
+        std::cin >> port_count;
         
         vector<Tap> available;
         for (const Tap& t : all_taps) 
         {
-            if (t.tap_value == tap_value)
+            if (t.port_count == port_count)
             {
                 available.push_back(t);
             }
@@ -145,15 +145,15 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     bool inserting_at_end = (position == chain.size());
 
     // Get port count
-    int tap_value;
+    int port_count;
     std::cout << "Port count (2/4/8): ";
-    std::cin >> tap_value;
+    std::cin >> port_count;
 
     // Filter available taps
     vector<Tap> available;
     for (const Tap& t : all_taps) 
     {
-        if (t.tap_value == tap_value)
+        if (t.port_count == port_count)
         {
             available.push_back(t);
         }
@@ -221,7 +221,7 @@ void ViewChain(const vector<Tap>& chain, float main_light_level)
 
         std::cout << i + 1;
         std::cout << "        | ";
-        std::cout << t.tap_value;
+        std::cout << t.port_count;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
         std::cout << " dB    | ";
@@ -247,7 +247,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     std::cout << "\n===============================";
     std::cout << std::endl;
 
-    std::cout << "\nPosition | Tap Value (dB) | Main Light Level (dB) | Drop Light Level (dB)\n";
+    std::cout << "\nPosition | Ports | Tap Value (dB) | Main Light Level (dB) | Drop Light Level (dB)\n";
     std::cout << "-------------------------------------------------------------------------\n";
 
     for (int i = 0; i < chain.size(); i++)
@@ -256,8 +256,10 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
 
         std::cout << i + 1;
         std::cout << "        | ";
-        std::cout << t.tap_value;
+        std::cout << t.port_count;
         std::cout << "              | ";
+        std::cout << t.tap_value_db;
+        std::cout << "           |   ";
         std::cout << main_light_level;
         std::cout << "                   | ";
         std::cout << main_light_level - t.max_drop_loss;
@@ -282,7 +284,7 @@ void LightTable (const vector <Tap>& chain)
 
     for (const Tap& t : chain) 
     {
-        std::cout << t.tap_value;
+        std::cout << t.port_count;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
         std::cout << " dB          | ";
