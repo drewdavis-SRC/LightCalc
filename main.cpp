@@ -8,7 +8,7 @@ using namespace std;
 
 struct Tap 
 {
-    int port_count;
+    int tap_value;
     int tap_value_db;
     double max_insertion_loss;
     double max_drop_loss;
@@ -70,15 +70,15 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
         std::cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
         
         // Select port count
-        int port_count;
+        int tap_value;
 
         std::cout << "Enter port count (2/4/8): ";
-        std::cin >> port_count;
+        std::cin >> tap_value;
         
         vector<Tap> available;
         for (const Tap& t : all_taps) 
         {
-            if (t.port_count == port_count)
+            if (t.tap_value == tap_value)
             {
                 available.push_back(t);
             }
@@ -143,15 +143,15 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     bool inserting_at_end = (position == chain.size());
 
     // Get port count
-    int port_count;
+    int tap_value;
     std::cout << "Port count (2/4/8): ";
-    std::cin >> port_count;
+    std::cin >> tap_value;
 
     // Filter available taps
     vector<Tap> available;
     for (const Tap& t : all_taps) 
     {
-        if (t.port_count == port_count)
+        if (t.tap_value == tap_value)
         {
             available.push_back(t);
         }
@@ -218,7 +218,7 @@ void ViewChain(const vector<Tap>& chain, float main_light_level) {
 
         std::cout << i + 1;
         std::cout << "        | ";
-        std::cout << t.port_count;
+        std::cout << t.tap_value;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
         std::cout << " dB    | ";
@@ -247,7 +247,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level) {
 
         std::cout << i + 1;
         std::cout << "        | ";
-        std::cout << t.port_count;
+        std::cout << t.tap_value;
         std::cout << "              | ";
         std::cout << main_light_level;
         std::cout << "                   | ";
@@ -273,7 +273,7 @@ void LightTable (const vector <Tap>& chain)
 
     for (const Tap& t : chain)
     {
-        std::cout << t.port_count;
+        std::cout << t.tap_value;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
         std::cout << " dB          | ";
