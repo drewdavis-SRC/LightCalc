@@ -286,6 +286,30 @@ void LightTable (const vector <Tap>& chain)
     }
 }
 
+// not working
+/* void ClearChain (const vector <Tap>& chain)
+{
+    std::cout << "\n" << chain.size() << " taps found.\n";
+
+    cout << "Deleting.";
+    sleep(1);
+    cout << ".";
+
+    for (int i = 0; i <= chain.size(); i++)
+    {
+        chain.pop_back();
+        sleep(1);
+        cout << ".";
+    }
+
+    std::cout << "\nChain is now clear.\n";
+    std::cout << "\nProceeding back to calculator menu.";
+    sleep(1);
+    std::cout << ".";
+    sleep(1);
+    std::cout << ".";
+} */
+
 int main ()
 {
     vector<Tap> all_taps = populateTaps();
