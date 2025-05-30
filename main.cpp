@@ -404,4 +404,5 @@ Things to add:
     Low priority:
         Reseting/clearing terminal to show only what is being dealt with
             IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
+        Make clearing the chain a function call
 */
