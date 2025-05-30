@@ -52,7 +52,8 @@ vector<Tap> populateTaps()
     return taps;
 }
 
-vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
+vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
+{
 
     std::cout << "\n=======================";
     std::cout << "\nChain Creation Selected";
@@ -117,7 +118,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps) {
     return chain;
 }
 
-void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
+void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
+{
     if (chain.empty())
     {
         std::cout << "\nChain is empty! Create one first.";
@@ -186,6 +188,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     {
         chain.back().is_terminating = false;
     }
+
     // Insert new tap
     chain.insert(chain.begin() + position, new_tap);
 
@@ -197,7 +200,8 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps) {
     std::cout << ".";
 }
 
-void ViewChain(const vector<Tap>& chain, float main_light_level) {
+void ViewChain(const vector<Tap>& chain, float main_light_level)
+{
     if (chain.empty()) 
     {
         std::cout << "\nChain is empty! Create one first.";
@@ -340,11 +344,11 @@ int main ()
     {
         std::cout << "\n\n===== FTTH Tap Calculator Menu =====\n"
              << "1. Create New Chain\n"
-             << "2. Insert Tap into Chain\n"
-             << "3. View Light Loss Table\n"
-             << "4. View Current Chain\n"
+             << "2. View Current Chain\n"
+             << "3. Clear Current Chain\n"
+             << "4. Insert Tap into Chain\n"
              << "5. Calculate Light Loss\n"
-             << "6. Clear Current Chain\n"
+             << "6. View Light Loss Table\n"
              << "7. Exit\n"
              << "====================================\n"
              << "\nEnter your choice: ";
@@ -377,25 +381,10 @@ int main ()
 
         else if (choice == 2)
         {
-            InsertTap(current_chain, all_taps);
-        }
-
-        else if (choice == 3)
-        {
-            LightTable(all_taps);
-        }
-
-        else if (choice == 4)
-        {
             ViewChain(current_chain, main_light_level);
         }
 
-        else if (choice == 5)
-        {
-            CalculateLoss(current_chain, main_light_level);
-        }
-
-        else if (choice == 6)
+        else if (choice == 3)
         {
             std::cout << "\n" << current_chain.size() << " taps found.\n";
 
@@ -416,6 +405,21 @@ int main ()
             std::cout << ".";
             sleep(1);
             std::cout << ".";
+        }
+
+        else if (choice == 4)
+        {
+            InsertTap(current_chain, all_taps);
+        }
+
+        else if (choice == 5)
+        {
+            CalculateLoss(current_chain, main_light_level);
+        }
+
+        else if (choice == 6)
+        {
+            LightTable(all_taps);
         }
 
         else if (choice == 7)
@@ -442,12 +446,12 @@ Issues:
 Things to add:
     High Priority:
         GUI
-        Main line light level prompt (done)
-        Light level at drops (done)
-        Main line light level changing from tap to tap based off the table
-        Light level at drops chagning based off the table (done)
-        Main line and drop light levels changing when tap inserted
-        Rework loss calculation
+        Main line light level prompt (DONE)
+        Light level at drops (DONE)
+        Main line light level changing from tap to tap based off the table (DONE)
+        Light level at drops chagning based off the table (DONE)
+        Main line and drop light levels changing when tap inserted (DONE)
+        Rework loss calculation (DONE)
         Insertion needs to refactor light loss on the whole chain
     
     Low priority:
