@@ -122,7 +122,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 {
     if (chain.empty())
     {
-        std::cout << "\nChain is empty! Create one first.";
+        std::cout << "\nPlease create a chain first.";
         return;
     }
 
@@ -169,7 +169,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     std::cout << "Available taps:\n";
     for (size_t i = 0; i < available.size(); i++) 
     {
-        std::cout << i+1 << ". " << available[i].tap_value_db << " dB\n";
+        std::cout << i + 1 << ". " << available[i].tap_value_db << " dB\n";
     }
 
     int choice;
@@ -197,23 +197,22 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     sleep(1);
     std::cout << ".";
     sleep(1);
-    std::cout << ".";
 }
 
 void ViewChain(const vector<Tap>& chain, float main_light_level)
 {
     if (chain.empty()) 
     {
-        std::cout << "\nChain is empty! Create one first.";
+        std::cout << "\nPlease create a chain first.";
         return;
     }
 
     std::cout << "\n=======================";
     std::cout << "\nChain View Selected";
     std::cout << "\n=======================";
-
     std::cout << std::endl;
-    std::cout << "Position | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
+
+    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
     std::cout << "----------------------------------------------------------------------------\n";
     
     for (size_t i = 0; i < chain.size(); i++) 
@@ -239,7 +238,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
 {
     if (chain.empty()) 
     {
-        std::cout << "\nChain is empty! Create one first.";
+        std::cout << "\nPlease create a chain first.";
         return;
     }
 
@@ -248,7 +247,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     std::cout << "\n===============================";
     std::cout << std::endl;
 
-    std::cout << "Position | Tap Value (dB) | Main Light Level (dB) | Drop Light Level (dB)\n";
+    std::cout << "\nPosition | Tap Value (dB) | Main Light Level (dB) | Drop Light Level (dB)\n";
     std::cout << "-------------------------------------------------------------------------\n";
 
     for (int i = 0; i < chain.size(); i++)
@@ -276,12 +275,12 @@ void LightTable (const vector <Tap>& chain)
     std::cout << "\n=========================";
     std::cout << "\nLight Table view selected";
     std::cout << "\n=========================";
-
     std::cout << std::endl;
-    std::cout << "Ports | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << std::endl;
+    
+    std::cout << "\nPorts | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << std::endl;
     std::cout << "-----------------------------------------------------------------------------------\n";
 
-    for (const Tap& t : chain)
+    for (const Tap& t : chain) 
     {
         std::cout << t.tap_value;
         std::cout << "     | ";
@@ -301,15 +300,15 @@ void LightTable (const vector <Tap>& chain)
 {
     std::cout << "\n" << chain.size() << " taps found.\n";
 
-    cout << "Deleting.";
+    std::cout << "Deleting.";
     sleep(1);
-    cout << ".";
+    std::cout << ".";
 
     for (int i = 0; i <= chain.size(); i++)
     {
         chain.pop_back();
         sleep(1);
-        cout << ".";
+        std::cout << ".";
     }
 
     std::cout << "\nChain is now clear.\n";
@@ -317,7 +316,6 @@ void LightTable (const vector <Tap>& chain)
     sleep(1);
     std::cout << ".";
     sleep(1);
-    std::cout << ".";
 } */
 
 int main ()
@@ -334,8 +332,6 @@ int main ()
     std::cin >> main_light_level;
 
     std::cout << "\nProceeding to calculator menu.";
-    sleep(1);
-    std::cout << ".";
     sleep(1);
     std::cout << ".";
     sleep(1);
@@ -361,19 +357,21 @@ int main ()
             {
                 std::cout << "\nClearing previous chain with " << current_chain.size() << " taps.\n";
 
-                cout << "Deleting.";
+                std::cout << "Deleting.";
                 sleep(1);
-                cout << ".";
+                std::cout << ".";
 
                 for (int i = 0; i <= current_chain.size(); i++)
                 {
                     current_chain.pop_back();
                     sleep(1);
-                    cout << ".";
+                    std::cout << ".";
                 }
 
                 std::cout << "\nChain is now clear.\n";
-                std::cout << "\nProceeding chain cretion.\n";
+                std::cout << "\nProceeding to chain cretion.\n";
+                sleep(1);
+                std::cout << ".";
                 sleep(1);
             }
             current_chain = CreateNewChain(all_taps);
@@ -388,15 +386,15 @@ int main ()
         {
             std::cout << "\n" << current_chain.size() << " taps found.\n";
 
-            cout << "Deleting.";
+            std::cout << "Deleting.";
             sleep(1);
-            cout << ".";
+            std::cout << ".";
 
             for (int i = 0; i <= current_chain.size(); i++)
             {
                 current_chain.pop_back();
                 sleep(1);
-                cout << ".";
+                std::cout << ".";
             }
 
             std::cout << "\nChain is now clear.\n";
@@ -404,7 +402,6 @@ int main ()
             sleep(1);
             std::cout << ".";
             sleep(1);
-            std::cout << ".";
         }
 
         else if (choice == 4)
@@ -441,7 +438,7 @@ int main ()
 Notes:
 
 Issues:
-    Insertion is replacing a current tap instead of inserting in between
+    Insertion is replacing a current tap instead of inserting in between (FIXED)
 
 Things to add:
     High Priority:
@@ -452,10 +449,12 @@ Things to add:
         Light level at drops chagning based off the table (DONE)
         Main line and drop light levels changing when tap inserted (DONE)
         Rework loss calculation (DONE)
-        Insertion needs to refactor light loss on the whole chain
+        Insertion needs to refactor light loss on the whole chain (DONE*)
+            * Calling calculate loss is working with inserted taps
     
     Low priority:
         Reseting/clearing terminal to show only what is being dealt with
             IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
+            This would need signal handlers to go back to menu
         Make clearing the chain a function call
 */
