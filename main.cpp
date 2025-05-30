@@ -257,9 +257,9 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
         std::cout << i + 1;
         std::cout << "        | ";
         std::cout << t.port_count;
-        std::cout << "              | ";
+        std::cout << "     | ";
         std::cout << t.tap_value_db;
-        std::cout << "           |   ";
+        std::cout << "             | ";
         std::cout << main_light_level;
         std::cout << "                   | ";
         std::cout << main_light_level - t.max_drop_loss;
@@ -289,9 +289,9 @@ void LightTable (const vector <Tap>& chain)
         std::cout << t.tap_value_db;
         std::cout << " dB          | ";
         std::cout << t.max_insertion_loss;
-        std::cout << " dB                  | ";
+        std::cout << " dB         | ";
         std::cout << t.max_drop_loss;
-        std::cout << " dB           | ";
+        std::cout << " dB              | ";
         std::cout << (t.is_terminating ? "Yes" : "No");
         std::cout << std::endl;
     }
