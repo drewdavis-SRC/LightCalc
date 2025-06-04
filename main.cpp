@@ -551,36 +551,35 @@ int main ()
 }
 
 /*
-Notes:
+Notes
+    Issues:
+        Insertion is replacing a current tap instead of inserting in between (FIXED)
 
-Issues:
-    Insertion is replacing a current tap instead of inserting in between (FIXED)
+    Things to add:
+        High Priority:
+            Need to start
+                GUI
+                Footage loss between taps
+                Insertion loss
+                Reccomended taps
 
-Things to add:
-    High Priority:
-        Need to start
-            GUI
-            Footage loss between taps
-            Insertion loss
-            Reccomended taps
-
-        In-progress
+            In-progress
 
 
-        Done
-            Main line light level prompt (DONE)
-            Light level at drops (DONE)
-            Main line light level changing from tap to tap based off the table (DONE)
-            Light level at drops chagning based off the table (DONE)
-            Main line and drop light levels changing when tap inserted (DONE)
-            Rework loss calculation (DONE)
-            Insertion needs to refactor light loss on the whole chain (DONE*)
-                * Calling calculate loss is working with inserted taps
-    
-    Low priority:
-        Reseting/clearing terminal to show only what is being dealt with
-            IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
-            This would need signal handlers to go back to menu
-        Make clearing the chain a function call
-        Clear temp chains used to insert and replace taps
+            Done
+                Main line light level prompt (DONE)
+                Light level at drops (DONE)
+                Main line light level changing from tap to tap based off the table (DONE)
+                Light level at drops chagning based off the table (DONE)
+                Main line and drop light levels changing when tap inserted (DONE)
+                Rework loss calculation (DONE)
+                Insertion needs to refactor light loss on the whole chain (DONE*)
+                    * Calling calculate loss is working with inserted taps
+        
+        Low priority:
+            Reseting/clearing terminal to show only what is being dealt with
+                IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
+                This would need signal handlers to go back to menu
+            Make clearing the chain a function call
+            Clear temp chains used to insert and replace taps
 */
