@@ -304,7 +304,7 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
 
     chain[position] = available[choice - 1];
 
-    std::cout << "Tap inserted successfully!\n";
+    std::cout << "Tap replaced successfully!\n";
     std::cout << "\nProceeding back to calculator menu.";
     sleep(1);
     std::cout << ".";
@@ -567,7 +567,7 @@ Notes
                 Insertion loss; approx 0.06 db/tap
                 Typical loss for bulk head; 0.2-0.3 db
                 Reccomended taps
-                When wrong tap value dB is entered incorrectly, dont go back to port count selection
+                When a tap value dB is entered that's outside port copunt parameters, dont go back to port count selection
                 Tap reccomendation inside insertion and replacement functions
 
             In-progress
@@ -580,7 +580,7 @@ Notes
                 Main line and drop light levels changing when tap inserted (DONE)
                 Rework loss calculation (DONE)
                 Insertion needs to refactor light loss on the whole chain (DONE*)
-                    * Calling calculate loss is working with inserted taps
+                    * Calling calculate loss is working with inserted and replaced taps
         
         Low priority:
             Reseting/clearing terminal to show only what is being dealt with
