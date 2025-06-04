@@ -480,7 +480,7 @@ int main ()
                 }
 
                 std::cout << "\nChain is now clear.\n";
-                std::cout << "\nProceeding to chain cretion.\n";
+                std::cout << "\nProceeding to chain cretion.";
                 sleep(1);
                 std::cout << ".";
                 sleep(1);
