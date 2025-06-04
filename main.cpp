@@ -559,12 +559,14 @@ Notes
         High Priority:
             Need to start
                 GUI
-                Footage loss between taps
-                Insertion loss
+                Footage loss between taps; 0.0001 db/ft
+                Insertion loss; approx 0.06 db/tap
+                Typical loss for bulk head; 0.2-0.3 db
                 Reccomended taps
+                When wrong tap value dB is entered incorrectly, dont go back to port count selection
+                Tap reccomendation inside insertion and replacement functions
 
             In-progress
-
 
             Done
                 Main line light level prompt (DONE)
