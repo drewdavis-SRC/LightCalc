@@ -302,9 +302,13 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
         return;
     }
 
-    Tap replace_tap = available[choice - 1];
+    chain[position] = available[choice - 1];
 
-    chain[position] = replace_tap;
+    std::cout << "Tap inserted successfully!\n";
+    std::cout << "\nProceeding back to calculator menu.";
+    sleep(1);
+    std::cout << ".";
+    sleep(1);
 }
 
 void ViewChain(const vector<Tap>& chain, float main_light_level)
