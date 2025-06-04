@@ -558,15 +558,24 @@ Issues:
 
 Things to add:
     High Priority:
-        GUI
-        Main line light level prompt (DONE)
-        Light level at drops (DONE)
-        Main line light level changing from tap to tap based off the table (DONE)
-        Light level at drops chagning based off the table (DONE)
-        Main line and drop light levels changing when tap inserted (DONE)
-        Rework loss calculation (DONE)
-        Insertion needs to refactor light loss on the whole chain (DONE*)
-            * Calling calculate loss is working with inserted taps
+        Need to start
+            GUI
+            Footage loss between taps
+            Insertion loss
+            Reccomended taps
+
+        In-progress
+
+
+        Done
+            Main line light level prompt (DONE)
+            Light level at drops (DONE)
+            Main line light level changing from tap to tap based off the table (DONE)
+            Light level at drops chagning based off the table (DONE)
+            Main line and drop light levels changing when tap inserted (DONE)
+            Rework loss calculation (DONE)
+            Insertion needs to refactor light loss on the whole chain (DONE*)
+                * Calling calculate loss is working with inserted taps
     
     Low priority:
         Reseting/clearing terminal to show only what is being dealt with
