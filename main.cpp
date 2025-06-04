@@ -67,6 +67,11 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
     for (int i = 0; i < num_taps; i++)
     {
+        /* int footage;
+
+        std::cout << "\nHow much footage of line is leading up to tap " << i << "?";
+        std::cin >> footage; */
+        
         bool is_last = (i == num_taps - 1);
         std::cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
         
