@@ -61,28 +61,23 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
     std::cout << "\nChain Creation Selected";
     std::cout << "\n=======================";
 
-    // receive number of taps in the chain for iteration
+    // initialize chain to store user selection
     vector<Tap> chain;
-    int num_taps;
 
+    // initialize and receive number of taps in the chain for iteration
+    int num_taps;
     std::cout << "\n\nEnter number of taps in chain: ";
     std::cin >> num_taps;
 
     // create taps for the amount entered
     for (int i = 0; i < num_taps; i++)
     {
-        // receive footage for tap
-        /* int footage;
-        std::cout << "\nHow much footage of line is leading up to tap " << i + 1 << "?";
-        std::cin >> footage; */
-
         // tell user which tap they're creating in the chain
         bool is_last = (i == num_taps - 1);
         std::cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
         
         // select port count of tap
         int port_count;
-
         std::cout << "Enter port count (2/4/8): ";
         std::cin >> port_count;
         
@@ -115,7 +110,6 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
         // get selection of the tap value
         int choice;
-
         std::cout << "\nChoose tap: ";
         std::cin >> choice;
 
@@ -397,13 +391,28 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     std::cout << "\n===============================";
     std::cout << std::endl;
 
-    std::cout << "\nPosition | Ports | Tap Value (dB) | Main Light Level (dB) | Drop Light Level (dB)\n";
-    std::cout << "---------------------------------------------------------------------------------\n";
+    // initialize splice and bulkhead loss
+    float splice_loss = 0.06 * 2;
+    float bulkhead_loss = 0.3;
 
     // iterate through curent chain
     for (int i = 0; i < chain.size(); i++)
     {
         const Tap& t = chain[i];
+
+        // initialize and receive footage for tap
+        int footage;
+        std::cout << "\nEnter the amout of line in feet leading up to tap " << i + 1 << ": ";
+        std::cin >> footage;
+
+        // initialize footage loss and calculate it
+        float footage_loss = 0.0001 * footage;
+
+        // subtract footage loss from main light level
+        main_light_level = main_light_level - footage_loss;
+
+        std::cout << "\nPosition | Ports | Tap Value (dB) | Footage | Main Light Level (dB) | Drop Light Level (dB)\n";
+        std::cout << "---------------------------------------------------------------------------------\n";
 
         // output tap elements
         std::cout << i + 1;
@@ -414,7 +423,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
         std::cout << "             | ";
         std::cout << main_light_level; // show the main level at the tap
         std::cout << "                   | ";
-        std::cout << main_light_level - t.max_drop_loss; // calculate loss at the drop 
+        std::cout << main_light_level - t.max_drop_loss - splice_loss - bulkhead_loss; // calculate loss at the drop 
 
         // update main level for loss between next tap
         float temp = main_light_level;
@@ -499,8 +508,7 @@ int main ()
     {
         // menu for user to interact with
         std::cout << "\n\n===== FTTH Tap Calculator Menu =====\n"
-             << "1. Create New Chain\n"
-             << "     - This will clear any existing chains.\n"
+             << "1. Create New Chain (clears existing)\n"
              << "2. View Current Chain\n"
              << "3. Clear Current Chain\n"
              << "4. Insert Tap into Chain\n"
