@@ -640,7 +640,6 @@ Notes
         High Priority:
             Need to start
                 GUI
-                Reccomended taps
                 When a tap value dB is entered that's outside port copunt parameters, dont go back to port count selection
                 Tap reccomendation inside insertion and replacement functions
 
