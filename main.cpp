@@ -463,19 +463,25 @@ void ClearChain (vector <Tap>& chain)
     std::cout << "\n====================";
     std::cout << std::endl;
 
+    // show how many taps will be cleared
     std::cout << "\n" << chain.size() << " taps found.\n";
 
+    // clear taps in the chain
     chain.clear();
 
+    // output the chain is clear
     std::cout << "Chain is now clear.\n";
 }
 
 void CreationClear (vector <Tap>& chain)
 {
+    // show how many taps will be cleared
     std::cout << "\nClearing previous chain with " << chain.size() << " taps.\n";
 
+    // clear taps in the chain
     chain.clear();
 
+    // output the chain is clear
     std::cout << "Chain is now clear.\n";
 }
 
