@@ -8,6 +8,7 @@ using namespace std;
 
 struct Tap 
 {
+    // values needed for each tap
     int port_count;
     int tap_value_db;
     double max_insertion_loss;
@@ -17,6 +18,7 @@ struct Tap
 
 vector<Tap> populateTaps() 
 {
+    // all possible taps
     vector<Tap> taps = {
         // 2-port taps
         {2, 21, 0.40, 21.95, false},
@@ -59,28 +61,32 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
     std::cout << "\nChain Creation Selected";
     std::cout << "\n=======================";
 
+    // receive number of taps in the chain for iteration
     vector<Tap> chain;
     int num_taps;
 
     std::cout << "\n\nEnter number of taps in chain: ";
     std::cin >> num_taps;
 
+    // create taps for the amount entered
     for (int i = 0; i < num_taps; i++)
     {
-        /* int footage;
+        // receive footage for tap
+        int footage;
+        std::cout << "\nHow much footage of line is leading up to tap " << i + 1 << "?";
+        std::cin >> footage;
 
-        std::cout << "\nHow much footage of line is leading up to tap " << i << "?";
-        std::cin >> footage; */
-        
+        // tell user which tap they're creating in the chain
         bool is_last = (i == num_taps - 1);
         std::cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
         
-        // Select port count
+        // select port count of tap
         int port_count;
 
         std::cout << "Enter port count (2/4/8): ";
         std::cin >> port_count;
         
+        // create new vector and fill it with taps of the selected port count
         vector<Tap> available;
         for (const Tap& t : all_taps) 
         {
@@ -90,6 +96,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             }
         }
 
+        // if the available chian is empty, showing in terminal
         if (available.empty()) 
         {
             std::cout << "No valid taps! Retry.\n";
@@ -97,7 +104,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             continue;
         }
 
-        // Display options
+
+        // display tap options by iterating through available vector
         std::cout << "Available taps:\n";
         for (size_t j = 0; j < available.size(); j++) 
         {
@@ -105,12 +113,13 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
                  << available[j].max_insertion_loss << " dB)\n";
         }
 
-        // Get selection
+        // get selection of the tap value
         int choice;
 
         std::cout << "\nChoose tap: ";
         std::cin >> choice;
 
+        // if the user enters an invalid number
         if (choice < 1 || choice > available.size()) 
         {
             std::cout << "Invalid! Retry.\n";
@@ -118,13 +127,16 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             continue;
         }
 
+        // fill user chain with the choice
         chain.push_back(available[choice-1]);
     }
+    // return the chain the user will be seeing
     return chain;
 }
 
 void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 {
+    // stop user from inserting if they havent created a chain
     if (chain.empty())
     {
         std::cout << "\nPlease create a chain first.";
@@ -139,10 +151,12 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
     std::cout << "--------------------------------------------------------------------\n";
 
+    // output taps for the entire current chain
     for (size_t i = 0; i < chain.size(); i++)
     {
         const Tap& t = chain[i];
 
+        // output tap elements
         std::cout << i + 1;
         std::cout << "        | ";
         std::cout << t.port_count;
@@ -155,26 +169,27 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         std::cout << std::endl;
     }
 
-    // Get position
+    // get position from user for insertion
     int position;
     std::cout << "\nInsert position (1-" << chain.size()+1 << "): ";
     std::cin >> position;
 
+    // make sure position cannot be outside the range of the chain
     if (position < 1 || position > chain.size()+1) 
     {
         std::cout << "Invalid position!\n";
         return;
     }
-    position--; // Convert to 0-based index
+    position--; // convert to 0-based index for vectors
 
     bool inserting_at_end = (position == chain.size());
 
-    // Get port count
+    // get port count for insertion
     int port_count;
     std::cout << "Port count (2/4/8): ";
     std::cin >> port_count;
 
-    // Filter available taps
+    // filter available taps
     vector<Tap> available;
     for (const Tap& t : all_taps) 
     {
@@ -190,31 +205,35 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         return;
     }
 
-    // Select tap
+    // show all choices for insertion based off port count
     std::cout << "Available taps:\n";
     for (size_t i = 0; i < available.size(); i++) 
     {
         std::cout << i + 1 << ". " << available[i].tap_value_db << " dB\n";
     }
 
+    // get tap value choice
     int choice;
     std::cout << "\nChoose tap: ";
-
     std::cin >> choice;
+
+    // dont let the choice be out of range
     if (choice < 1 || choice > available.size()) 
     {
         std::cout << "Invalid!\n";
         return;
     }
+
+    // initalize new variable that holds the choice
     Tap new_tap = available[choice-1];
 
-    // Update previous last tap if inserting at end
+    // update previous last tap if inserting at end
     if (inserting_at_end && !chain.empty()) 
     {
         chain.back().is_terminating = false;
     }
 
-    // Insert new tap
+    // insert new tap at desired position
     chain.insert(chain.begin() + position, new_tap);
 
     std::cout << "Tap inserted successfully!\n";
@@ -226,6 +245,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 
 void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
 {
+    // stop user from replacig if they havent created a chain
     if (chain.empty())
     {
         std::cout << "\nPlease create a chain first.";
@@ -242,10 +262,12 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
     std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
     std::cout << "--------------------------------------------------------------------\n";
 
+    // iterate through current chain for viewing
     for (size_t i = 0; i < chain.size(); i++)
     {
         const Tap& t = chain[i];
 
+        // show each element of the tap
         std::cout << i + 1;
         std::cout << "        | ";
         std::cout << t.port_count;
@@ -258,10 +280,12 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
         std::cout << std::endl;
     }
 
+    // get the position for replacement
     int position;
     std::cout << "\nEnter the position of the tap to replace: ";
     std::cin >> position;
 
+    // dont let position go out of range
     if (position < 1 || position > chain.size()+1) 
     {
         std::cout << "Invalid position!\n";
@@ -269,10 +293,12 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
     }
     position--; // users see i + 1, move back to 0 based index for vectors
 
+    // get the port count of replacement tap
     int port_count;
     std::cout << "\nEnter port count (2/4/8): ";
     std::cin >> port_count;
 
+    // fill available vector of taps with that port count
     vector<Tap> available;
     for (const Tap& t : all_taps) 
     {
@@ -288,7 +314,7 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
         return;
     }
 
-    // Display options
+    // display available taps
     std::cout << "Available taps:\n";
 
     for (size_t j = 0; j < available.size(); j++) 
@@ -297,16 +323,19 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
                 << available[j].max_insertion_loss << " dB)\n";
     }
 
+    // get user choice of tap
     int choice;
     std::cout << "\nChoose tap: ";
     std::cin >> choice;
 
+    // dont let it be outside range of vector
     if (choice < 1 || choice > available.size())
     {
         std::cout << "Invalid!\n";
         return;
     }
 
+    // replace old tap with new
     chain[position] = available[choice - 1];
 
     std::cout << "Tap replaced successfully!\n";
@@ -318,6 +347,7 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
 
 void ViewChain(const vector<Tap>& chain, float main_light_level)
 {
+    // stop user from viewing if they havent created a chain
     if (chain.empty()) 
     {
         std::cout << "\nPlease create a chain first.";
@@ -332,10 +362,12 @@ void ViewChain(const vector<Tap>& chain, float main_light_level)
     std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
     std::cout << "----------------------------------------------------------------------------------\n";
     
+    // iterate through current chain
     for (size_t i = 0; i < chain.size(); i++) 
     {
         const Tap& t = chain[i];
 
+        // output each element of the tap
         std::cout << i + 1;
         std::cout << "        | ";
         std::cout << t.port_count;
@@ -353,6 +385,7 @@ void ViewChain(const vector<Tap>& chain, float main_light_level)
 
 void CalculateLoss(const vector<Tap>& chain, float main_light_level)
 {
+    // stop user from calculating if they havent created a chain
     if (chain.empty()) 
     {
         std::cout << "\nPlease create a chain first.";
@@ -367,20 +400,23 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     std::cout << "\nPosition | Ports | Tap Value (dB) | Main Light Level (dB) | Drop Light Level (dB)\n";
     std::cout << "---------------------------------------------------------------------------------\n";
 
+    // iterate through curent chain
     for (int i = 0; i < chain.size(); i++)
     {
         const Tap& t = chain[i];
 
+        // output tap elements
         std::cout << i + 1;
         std::cout << "        | ";
         std::cout << t.port_count;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
         std::cout << "             | ";
-        std::cout << main_light_level;
+        std::cout << main_light_level; // show the main level at the tap
         std::cout << "                   | ";
-        std::cout << main_light_level - t.max_drop_loss;
+        std::cout << main_light_level - t.max_drop_loss; // calculate loss at the drop 
 
+        // update main level for loss between next tap
         float temp = main_light_level;
         temp = temp - t.max_insertion_loss;
         main_light_level = temp;
@@ -399,8 +435,10 @@ void LightTable (const vector <Tap>& chain)
     std::cout << "\nPorts | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << std::endl;
     std::cout << "-----------------------------------------------------------------------------------\n";
 
+    // iterate through the tap table
     for (const Tap& t : chain) 
     {
+        // output the elements for each tap
         std::cout << t.port_count;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
@@ -439,11 +477,11 @@ void LightTable (const vector <Tap>& chain)
 
 int main ()
 {
+    // initalize all taps and chain for the user
     vector<Tap> all_taps = populateTaps();
     vector<Tap> current_chain;
 
-    int choice;
-
+    // initialize, explain, and receive main light level
     float main_light_level;
     std::cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
     std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
@@ -455,10 +493,14 @@ int main ()
     std::cout << ".";
     sleep(1);
     
+    // intialize menu choice
+    int choice;
     do 
     {
+        // menu for user to interact with
         std::cout << "\n\n===== FTTH Tap Calculator Menu =====\n"
              << "1. Create New Chain\n"
+             << "     - This will clear any existing chains.\n"
              << "2. View Current Chain\n"
              << "3. Clear Current Chain\n"
              << "4. Insert Tap into Chain\n"
@@ -469,10 +511,13 @@ int main ()
              << "====================================\n"
              << "\nEnter your choice: ";
         
+        // get user choice
         std::cin >> choice;
         
+        // choice 1 (call create)
         if (choice == 1)
         {
+            // clear current chain if it's not empty to save memory 
             if (!current_chain.empty())
             {
                 std::cout << "\nClearing previous chain with " << current_chain.size() << " taps.\n";
@@ -497,11 +542,13 @@ int main ()
             current_chain = CreateNewChain(all_taps);
         }
 
+        // choice (call view chain)
         else if (choice == 2)
         {
             ViewChain(current_chain, main_light_level);
         }
-
+        
+        // choice 3 (clear the chain)
         else if (choice == 3)
         {
             std::cout << "\n" << current_chain.size() << " taps found.\n";
@@ -524,37 +571,43 @@ int main ()
             sleep(1);
         }
 
+        // choice 4 (call tap insertion)
         else if (choice == 4)
         {
             InsertTap(current_chain, all_taps);
         }
 
+        // choice 5 (call tap replacement)
         else if (choice == 5)
         {
             ReplaceTap(current_chain, all_taps);
         }
 
+        // choice 6 (call calculate loss)
         else if (choice == 6)
         {
             CalculateLoss(current_chain, main_light_level);
         }
 
+        // choice 7 (call light table)
         else if (choice == 7)
         {
             LightTable(all_taps);
         }
 
+        // choice 8 (exit message)
         else if (choice == 8)
         {
             std::cout << "\nExiting...\n";
         }
 
+        // anything else is wrong, retry
         else
         {
             std::cout << "\nInvalid choice!\n";
         }
 
-    } while (choice != 8);
+    } while (choice != 8); // do until exit (8) is choosen
 
     return 0;
 }
