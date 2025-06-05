@@ -459,6 +459,11 @@ void LightTable (const vector <Tap>& chain)
 // not working
 /* void ClearChain (const vector <Tap>& chain)
 {
+    std::cout << "\n=========================";
+    std::cout << "\nClear Chain Selected";
+    std::cout << "\n=========================";
+    std::cout << std::endl;
+
     std::cout << "\n" << chain.size() << " taps found.\n";
 
     for (int i = 0; i <= chain.size(); i++)
@@ -466,7 +471,7 @@ void LightTable (const vector <Tap>& chain)
         chain.pop_back();
     }
 
-    std::cout << "\nChain is now clear.\n";
+    std::cout << "Chain is now clear.\n";
 } */
 
 int main ()
@@ -487,7 +492,7 @@ int main ()
     do 
     {
         // menu for user to interact with
-        std::cout << "\n\n===== FTTH Tap Calculator Menu =====\n"
+        std::cout << "\n===== FTTH Tap Calculator Menu =====\n"
              << "1. Create New Chain (clears existing)\n"
              << "2. View Current Chain\n"
              << "3. Clear Current Chain\n"
@@ -515,7 +520,7 @@ int main ()
                     current_chain.pop_back();
                 }
 
-                std::cout << "\nChain is now clear.\n";
+                std::cout << "Chain is now clear.\n";
             }
             current_chain = CreateNewChain(all_taps);
         }
@@ -529,6 +534,11 @@ int main ()
         // choice 3 (clear the chain)
         else if (choice == 3)
         {
+            std::cout << "\n=========================";
+            std::cout << "\nClear Chain Selected";
+            std::cout << "\n=========================";
+            std::cout << std::endl;
+
             std::cout << "\n" << current_chain.size() << " taps found.\n";
 
             for (int i = 0; i <= current_chain.size(); i++)
@@ -536,7 +546,7 @@ int main ()
                 current_chain.pop_back();
             }
 
-            std::cout << "\nChain is now clear.\n";
+            std::cout << "Chain is now clear.\n";
         }
 
         // choice 4 (call tap insertion)
