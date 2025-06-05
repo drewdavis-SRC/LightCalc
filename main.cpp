@@ -391,37 +391,48 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     std::cout << "\n===============================";
     std::cout << std::endl;
 
-    // initialize splice and bulkhead loss
+    // initializations
+    int footage;
     float splice_loss = 0.06 * 2;
     float bulkhead_loss = 0.3;
+
+    std::cout << "\nPosition | Ports | Tap Value (dB) | Footage (ft) | Main Light Level (dB) | Drop Light Level (dB)\n";
+    std::cout << "--------------------------------------------------------------------------------------------------\n";
 
     // iterate through curent chain
     for (int i = 0; i < chain.size(); i++)
     {
         const Tap& t = chain[i];
 
-        // initialize and receive footage for tap
-        int footage;
-        std::cout << "\nEnter the amout of line in feet leading up to tap " << i + 1 << ": ";
-        std::cin >> footage;
-
-        // initialize footage loss and calculate it
-        float footage_loss = 0.0001 * footage;
-
-        // subtract footage loss from main light level
-        main_light_level = main_light_level - footage_loss;
-
-        std::cout << "\nPosition | Ports | Tap Value (dB) | Footage | Main Light Level (dB) | Drop Light Level (dB)\n";
-        std::cout << "---------------------------------------------------------------------------------\n";
-
-        // output tap elements
+        // output tap elements up to footage
         std::cout << i + 1;
         std::cout << "        | ";
         std::cout << t.port_count;
         std::cout << "     | ";
         std::cout << t.tap_value_db;
         std::cout << "             | ";
-        std::cout << main_light_level; // show the main level at the tap
+
+        std::cout.flush();
+
+        // receive footage for tap
+        std::cin >> footage;
+        float footage_loss = 0.0001 * footage;
+
+        // ANSI escape codes
+        // 033[F moves the cursor back to the start of the line
+        // 033[K clears the line
+        std::cout << "\033[F\033[K";
+
+        // reprint everything since the line was cleared
+        std::cout << i + 1;
+        std::cout << "        | ";
+        std::cout << t.port_count;
+        std::cout << "     | ";
+        std::cout << t.tap_value_db;
+        std::cout << "             | ";
+        std::cout << footage;
+        std::cout << "          | ";
+        std::cout << main_light_level - footage_loss; // show the main level at the tap minus footage loss
         std::cout << "                   | ";
         std::cout << main_light_level - t.max_drop_loss - splice_loss - bulkhead_loss; // calculate loss at the drop 
 
@@ -629,9 +640,6 @@ Notes
         High Priority:
             Need to start
                 GUI
-                Footage loss between taps; 0.0001 db/ft
-                Insertion loss; approx 0.06 db/tap
-                Typical loss for bulk head; 0.2-0.3 db
                 Reccomended taps
                 When a tap value dB is entered that's outside port copunt parameters, dont go back to port count selection
                 Tap reccomendation inside insertion and replacement functions
@@ -639,14 +647,19 @@ Notes
             In-progress
 
             Done
-                Main line light level prompt (DONE)
-                Light level at drops (DONE)
-                Main line light level changing from tap to tap based off the table (DONE)
-                Light level at drops chagning based off the table (DONE)
-                Main line and drop light levels changing when tap inserted (DONE)
-                Rework loss calculation (DONE)
-                Insertion needs to refactor light loss on the whole chain (DONE*)
+                Main line light level prompt
+                Light level at drops 
+                Main line light level changing from tap to tap based off the table 
+                Light level at drops chagning based off the table 
+                Main line and drop light levels changing when tap inserted 
+                Rework loss calculation 
+                Insertion needs to refactor light loss on the whole chain *
                     * Calling calculate loss is working with inserted and replaced taps
+                                Footage loss between taps; 0.0001 db/ft
+                Insertion loss; approx 0.06 db/tap *
+                    Needs to be checked for correct calculation
+                Typical loss for bulk head; 0.2-0.3 db *
+                    Needs to be checked for correct calculation
         
         Low priority:
             Reseting/clearing terminal to show only what is being dealt with
