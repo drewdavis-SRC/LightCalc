@@ -231,10 +231,6 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     chain.insert(chain.begin() + position, new_tap);
 
     std::cout << "Tap inserted successfully!\n";
-    std::cout << "\nProceeding back to calculator menu.";
-    sleep(1);
-    std::cout << ".";
-    sleep(1);
 }
 
 void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
@@ -333,10 +329,6 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
     chain[position] = available[choice - 1];
 
     std::cout << "Tap replaced successfully!\n";
-    std::cout << "\nProceeding back to calculator menu.";
-    sleep(1);
-    std::cout << ".";
-    sleep(1);
 }
 
 void ViewChain(const vector<Tap>& chain, float main_light_level)
@@ -404,15 +396,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     {
         const Tap& t = chain[i];
 
-        // output tap elements up to footage
-        std::cout << i + 1;
-        std::cout << "        | ";
-        std::cout << t.port_count;
-        std::cout << "     | ";
-        std::cout << t.tap_value_db;
-        std::cout << "             | ";
-
-        std::cout.flush();
+        std::cout << "Enter footage for tap " << i + 1 << ": ";
 
         // receive footage for tap
         std::cin >> footage;
@@ -477,22 +461,12 @@ void LightTable (const vector <Tap>& chain)
 {
     std::cout << "\n" << chain.size() << " taps found.\n";
 
-    std::cout << "Deleting.";
-    sleep(1);
-    std::cout << ".";
-
     for (int i = 0; i <= chain.size(); i++)
     {
         chain.pop_back();
-        sleep(1);
-        std::cout << ".";
     }
 
     std::cout << "\nChain is now clear.\n";
-    std::cout << "\nProceeding back to calculator menu.";
-    sleep(1);
-    std::cout << ".";
-    sleep(1);
 } */
 
 int main ()
@@ -507,11 +481,6 @@ int main ()
     std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
     std::cout << "\nEnter the main line light level: ";
     std::cin >> main_light_level;
-
-    std::cout << "\nProceeding to calculator menu.";
-    sleep(1);
-    std::cout << ".";
-    sleep(1);
     
     // intialize menu choice
     int choice;
@@ -541,22 +510,12 @@ int main ()
             {
                 std::cout << "\nClearing previous chain with " << current_chain.size() << " taps.\n";
 
-                std::cout << "Deleting.";
-                sleep(1);
-                std::cout << ".";
-
                 for (int i = 0; i <= current_chain.size(); i++)
                 {
                     current_chain.pop_back();
-                    sleep(1);
-                    std::cout << ".";
                 }
 
                 std::cout << "\nChain is now clear.\n";
-                std::cout << "\nProceeding to chain cretion.";
-                sleep(1);
-                std::cout << ".";
-                sleep(1);
             }
             current_chain = CreateNewChain(all_taps);
         }
@@ -572,22 +531,12 @@ int main ()
         {
             std::cout << "\n" << current_chain.size() << " taps found.\n";
 
-            std::cout << "Deleting.";
-            sleep(1);
-            std::cout << ".";
-
             for (int i = 0; i <= current_chain.size(); i++)
             {
                 current_chain.pop_back();
-                sleep(1);
-                std::cout << ".";
             }
 
             std::cout << "\nChain is now clear.\n";
-            std::cout << "\nProceeding back to calculator menu.";
-            sleep(1);
-            std::cout << ".";
-            sleep(1);
         }
 
         // choice 4 (call tap insertion)
