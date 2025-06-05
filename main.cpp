@@ -133,7 +133,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     // stop user from inserting if they havent created a chain
     if (chain.empty())
     {
-        std::cout << "\nPlease create a chain first.";
+        std::cout << "\nPlease create a chain first.\n";
         return;
     }
 
@@ -238,7 +238,7 @@ void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
     // stop user from replacig if they havent created a chain
     if (chain.empty())
     {
-        std::cout << "\nPlease create a chain first.";
+        std::cout << "\nPlease create a chain first.\n";
         return;
     }
 
@@ -336,7 +336,7 @@ void ViewChain(const vector<Tap>& chain, float main_light_level)
     // stop user from viewing if they havent created a chain
     if (chain.empty()) 
     {
-        std::cout << "\nPlease create a chain first.";
+        std::cout << "\nPlease create a chain first.\n";
         return;
     }
 
@@ -374,7 +374,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     // stop user from calculating if they havent created a chain
     if (chain.empty()) 
     {
-        std::cout << "\nPlease create a chain first.";
+        std::cout << "\nPlease create a chain first.\n";
         return;
     }
 
@@ -456,23 +456,28 @@ void LightTable (const vector <Tap>& chain)
     }
 }
 
-// not working
-/* void ClearChain (const vector <Tap>& chain)
+void ClearChain (vector <Tap>& chain)
 {
-    std::cout << "\n=========================";
+    std::cout << "\n====================";
     std::cout << "\nClear Chain Selected";
-    std::cout << "\n=========================";
+    std::cout << "\n====================";
     std::cout << std::endl;
 
     std::cout << "\n" << chain.size() << " taps found.\n";
 
-    for (int i = 0; i <= chain.size(); i++)
-    {
-        chain.pop_back();
-    }
+    chain.clear();
 
     std::cout << "Chain is now clear.\n";
-} */
+}
+
+void CreationClear (vector <Tap>& chain)
+{
+    std::cout << "\nClearing previous chain with " << chain.size() << " taps.\n";
+
+    chain.clear();
+
+    std::cout << "Chain is now clear.\n";
+}
 
 int main ()
 {
@@ -513,14 +518,7 @@ int main ()
             // clear current chain if it's not empty to save memory 
             if (!current_chain.empty())
             {
-                std::cout << "\nClearing previous chain with " << current_chain.size() << " taps.\n";
-
-                for (int i = 0; i <= current_chain.size(); i++)
-                {
-                    current_chain.pop_back();
-                }
-
-                std::cout << "Chain is now clear.\n";
+                CreationClear(current_chain);
             }
             current_chain = CreateNewChain(all_taps);
         }
@@ -534,19 +532,7 @@ int main ()
         // choice 3 (clear the chain)
         else if (choice == 3)
         {
-            std::cout << "\n=========================";
-            std::cout << "\nClear Chain Selected";
-            std::cout << "\n=========================";
-            std::cout << std::endl;
-
-            std::cout << "\n" << current_chain.size() << " taps found.\n";
-
-            for (int i = 0; i <= current_chain.size(); i++)
-            {
-                current_chain.pop_back();
-            }
-
-            std::cout << "Chain is now clear.\n";
+            ClearChain(current_chain);
         }
 
         // choice 4 (call tap insertion)
@@ -625,4 +611,5 @@ Notes
                 This would need signal handlers to go back to menu
             Make clearing the chain a function call
             Clear temp chains used to insert and replace taps
+            Delete tap
 */
