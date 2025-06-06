@@ -3,8 +3,22 @@
 #include <string>
 #include <stdio.h>
 #include <unistd.h>
+#include <limits>
+#include <windows.h>
 
 using namespace std;
+
+void ResetTerminal()
+{
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD coord = {0, 0};
+    DWORD count;
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    
+    GetConsoleScreenBufferInfo(hStdOut, &csbi);
+    FillConsoleOutputCharacter(hStdOut, ' ', csbi.dwSize.X * csbi.dwSize.Y, coord, &count);
+    SetConsoleCursorPosition(hStdOut, coord);
+}
 
 struct Tap 
 {
@@ -54,27 +68,118 @@ vector<Tap> populateTaps()
     return taps;
 }
 
+void MenuTitle()
+{
+    std::cout << "===== FTTH Tap Calculator Menu =====\n"
+             << "1. Create New Chain (clears existing)\n"
+             << "2. View Current Chain\n"
+             << "3. Clear Current Chain\n"
+             << "4. Insert Tap into Chain\n"
+             << "5. Replace Tap on Chain\n"
+             << "6. Calculate Light Loss\n"
+             << "7. View Light Loss Table\n"
+             << "8. Exit\n"
+             << "====================================\n"
+             << "\nEnter your choice: ";
+}
+
+void MainLightQuestion()
+{
+    std::cout << "Main line light levels are usually 1-3 dB. This is needed to make proper calculations.";
+    std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
+    std::cout << "\nEnter the main line light level: ";
+}
+
+void ChainCreationTitle()
+{
+    std::cout << "=======================";
+    std::cout << "\nChain Creation Selected";
+    std::cout << "\n=======================";
+    std::cout << std::endl;
+}
+
+void TapInsertionTitle()
+{
+    std::cout << "======================";
+    std::cout << "\nTap Insertion Selected";
+    std::cout << "\n======================";
+
+    std::cout << "\n\nThe current chain is shown below.\n";
+    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
+    std::cout << "--------------------------------------------------------------------\n";
+}
+
+void TapReplacementTitle()
+{
+    std::cout << "========================";
+    std::cout << "\nTap Replacement Selected";
+    std::cout << "\n========================";
+    std::cout << std::endl;
+
+    std::cout << "\n\nThe current chain is shown below.\n";
+
+    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
+    std::cout << "--------------------------------------------------------------------\n";
+}
+
+
+void ViewChainTitle()
+{
+    std::cout << "===================";
+    std::cout << "\nChain View Selected";
+    std::cout << "\n===================";
+    std::cout << std::endl;
+}
+
+void ClearChainTitle()
+{
+    std::cout << "====================";
+    std::cout << "\nClear Chain Selected";
+    std::cout << "\n====================";
+}
+
+void LossCalculationTitle()
+{
+    std::cout << "===============================";
+    std::cout << "\nLight Loss Calculaiton Selected";
+    std::cout << "\n===============================";
+    std::cout << std::endl;
+}
+
+void LightTableTitle()
+{
+    std::cout << "=========================";
+    std::cout << "\nLight Table View Selected";
+    std::cout << "\n=========================";
+    std::cout << std::endl;
+    
+    std::cout << "\nPorts | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << std::endl;
+    std::cout << "-----------------------------------------------------------------------------------\n";
+}
+
 vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 {
 
-    std::cout << "\n=======================";
-    std::cout << "\nChain Creation Selected";
-    std::cout << "\n=======================";
+    ChainCreationTitle();
 
     // initialize chain to store user selection
     vector<Tap> chain;
 
     // initialize and receive number of taps in the chain for iteration
     int num_taps;
-    std::cout << "\n\nEnter number of taps in chain: ";
+    std::cout << "\nEnter number of taps in chain: ";
     std::cin >> num_taps;
+
+    ResetTerminal();
+
+    ChainCreationTitle();
 
     // create taps for the amount entered
     for (int i = 0; i < num_taps; i++)
     {
         // tell user which tap they're creating in the chain
         bool is_last = (i == num_taps - 1);
-        std::cout << "\nTap " << i + 1 << "/" << num_taps << ":\n";
+        std::cout << "\n==== Tap " << i + 1 << "/" << num_taps << " ====\n";
         
         // select port count of tap
         int port_count;
@@ -94,14 +199,15 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         // if the available chian is empty, showing in terminal
         if (available.empty()) 
         {
-            std::cout << "No valid taps! Retry.\n";
+            ResetTerminal();
+            ChainCreationTitle();
+            std::cout << "\nThere are no vaild taps with that port count.\n";
             i--;
             continue;
         }
 
-
         // display tap options by iterating through available vector
-        std::cout << "Available taps:\n";
+        std::cout << "\nAvailable taps:\n";
         for (size_t j = 0; j < available.size(); j++) 
         {
             std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
@@ -116,15 +222,20 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         // if the user enters an invalid number
         if (choice < 1 || choice > available.size()) 
         {
-            std::cout << "Invalid! Retry.\n";
+            ResetTerminal();
+            ChainCreationTitle();
+            std::cout << "\nInvalid tap value. Restarting.\n";
             i--;
             continue;
         }
 
         // fill user chain with the choice
         chain.push_back(available[choice-1]);
+        ResetTerminal();
+        ChainCreationTitle();
     }
-    // return the chain the user will be seeing
+    // reset terminal and return the chain the user will be seeing
+    ResetTerminal();
     return chain;
 }
 
@@ -133,17 +244,11 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     // stop user from inserting if they havent created a chain
     if (chain.empty())
     {
-        std::cout << "\nPlease create a chain first.\n";
+        std::cout << "Please create a chain first.\n\n";
         return;
     }
 
-    std::cout << "\n======================";
-    std::cout << "\nTap Insertion Selected";
-    std::cout << "\n======================";
-
-    std::cout << "\nThe current chain is shown below.\n";
-    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
-    std::cout << "--------------------------------------------------------------------\n";
+    TapInsertionTitle();
 
     // output taps for the entire current chain
     for (size_t i = 0; i < chain.size(); i++)
@@ -230,27 +335,21 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     // insert new tap at desired position
     chain.insert(chain.begin() + position, new_tap);
 
-    std::cout << "Tap inserted successfully!\n";
+    ResetTerminal();
+    std::cout << "\nTap inserted successfully!\n";
+    sleep(2);
 }
 
-void ReplaceTap (vector<Tap>& chain, const vector<Tap>& all_taps)
+void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 {
     // stop user from replacig if they havent created a chain
     if (chain.empty())
     {
-        std::cout << "\nPlease create a chain first.\n";
+        std::cout << "Please create a chain first.\n\n";
         return;
     }
 
-    std::cout << "\n========================";
-    std::cout << "\nTap Replacement Selected";
-    std::cout << "\n========================";
-    std::cout << std::endl;
-
-    std::cout << "\nThe current chain is shown below.\n";
-
-    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
-    std::cout << "--------------------------------------------------------------------\n";
+    TapReplacementTitle();
 
     // iterate through current chain for viewing
     for (size_t i = 0; i < chain.size(); i++)
@@ -336,14 +435,11 @@ void ViewChain(const vector<Tap>& chain, float main_light_level)
     // stop user from viewing if they havent created a chain
     if (chain.empty()) 
     {
-        std::cout << "\nPlease create a chain first.\n";
+        std::cout << "Please create a chain first.\n\n";
         return;
     }
 
-    std::cout << "\n===================";
-    std::cout << "\nChain View Selected";
-    std::cout << "\n===================";
-    std::cout << std::endl;
+    ViewChainTitle();
 
     std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
     std::cout << "----------------------------------------------------------------------------------\n";
@@ -374,14 +470,11 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     // stop user from calculating if they havent created a chain
     if (chain.empty()) 
     {
-        std::cout << "\nPlease create a chain first.\n";
+        std::cout << "Please create a chain first.\n\n";
         return;
     }
 
-    std::cout << "\n===============================";
-    std::cout << "\nLight Loss Calculaiton Selected";
-    std::cout << "\n===============================";
-    std::cout << std::endl;
+    LossCalculationTitle();
 
     // initializations
     int footage;
@@ -429,15 +522,9 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     }
 }
 
-void LightTable (const vector <Tap>& chain)
+void LightTable(const vector <Tap>& chain)
 {
-    std::cout << "\n=========================";
-    std::cout << "\nLight Table View Selected";
-    std::cout << "\n=========================";
-    std::cout << std::endl;
-    
-    std::cout << "\nPorts | Tap Value (dB) | Max Insertion Loss (dB) | Max Drop Loss (dB) | Terminating" << std::endl;
-    std::cout << "-----------------------------------------------------------------------------------\n";
+    LightTableTitle();
 
     // iterate through the tap table
     for (const Tap& t : chain) 
@@ -456,70 +543,66 @@ void LightTable (const vector <Tap>& chain)
     }
 }
 
-void ClearChain (vector <Tap>& chain)
+void ClearChain(vector <Tap>& chain)
 {
-    std::cout << "\n====================";
-    std::cout << "\nClear Chain Selected";
-    std::cout << "\n====================";
-    std::cout << std::endl;
+    ClearChainTitle();
 
     // show how many taps will be cleared
-    std::cout << "\n" << chain.size() << " taps found.\n";
+    std::cout << "\n\n" << chain.size() << " taps found. ";
 
     // clear taps in the chain
     chain.clear();
 
     // output the chain is clear
-    std::cout << "Chain is now clear.\n";
+    std::cout << "Chain is now clear.";
+
+    sleep(2);
+    std::cout << "\n\nProceeding back to menu.";
+    sleep(1);
+    std::cout << ".";
+    sleep(1);
+
+    ResetTerminal();
 }
 
-void CreationClear (vector <Tap>& chain)
+void CreationClear(vector <Tap>& chain)
 {
+    if (chain.empty())
+    {
+        std::cout << "Please create a chain first.\n\n";
+        return;
+    }
     // show how many taps will be cleared
-    std::cout << "\nClearing previous chain with " << chain.size() << " taps.\n";
+    std::cout << "Clearing previous chain with " << chain.size() << " taps. ";
 
     // clear taps in the chain
     chain.clear();
 
     // output the chain is clear
-    std::cout << "Chain is now clear.\n";
+    std::cout << "Chain is now clear.\n\n";
 }
 
-int main ()
+int main()
 {
+    ResetTerminal();
+
     // initalize all taps and chain for the user
     vector<Tap> all_taps = populateTaps();
     vector<Tap> current_chain;
 
     // initialize, explain, and receive main light level
     float main_light_level;
-    std::cout << "Main line light levels are usually 1-3 dB. This is needed to make proper calculations.";
-    std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
-    std::cout << "\nEnter the main line light level: ";
+    MainLightQuestion();
     std::cin >> main_light_level;
 
-    // add something here that deletes above output
-    // ANSI escape codes
-    // 033[F moves the cursor back to the start of the line
-    // 033[K clears the line
-    // std::cout << "\033[F\033[K";
+    ResetTerminal();
     
     // intialize menu choice
     int choice;
     do 
     {
         // menu for user to interact with
-        std::cout << "\n===== FTTH Tap Calculator Menu =====\n"
-             << "1. Create New Chain (clears existing)\n"
-             << "2. View Current Chain\n"
-             << "3. Clear Current Chain\n"
-             << "4. Insert Tap into Chain\n"
-             << "5. Replace Tap on Chain\n"
-             << "6. Calculate Light Loss\n"
-             << "7. View Light Loss Table\n"
-             << "8. Exit\n"
-             << "====================================\n"
-             << "\nEnter your choice: ";
+        MenuTitle();
         
         // get user choice
         std::cin >> choice;
@@ -527,6 +610,8 @@ int main ()
         // choice 1 (call create)
         if (choice == 1)
         {
+            ResetTerminal();
+
             // clear current chain if it's not empty to save memory 
             if (!current_chain.empty())
             {
@@ -538,36 +623,48 @@ int main ()
         // choice (call view chain)
         else if (choice == 2)
         {
+            ResetTerminal();
+
             ViewChain(current_chain, main_light_level);
         }
         
         // choice 3 (clear the chain)
         else if (choice == 3)
         {
+            ResetTerminal();
+
             ClearChain(current_chain);
         }
 
         // choice 4 (call tap insertion)
         else if (choice == 4)
         {
+            ResetTerminal();
+
             InsertTap(current_chain, all_taps);
         }
 
         // choice 5 (call tap replacement)
         else if (choice == 5)
         {
+            ResetTerminal();
+
             ReplaceTap(current_chain, all_taps);
         }
 
         // choice 6 (call calculate loss)
         else if (choice == 6)
         {
+            ResetTerminal();
+
             CalculateLoss(current_chain, main_light_level);
         }
 
         // choice 7 (call light table)
         else if (choice == 7)
         {
+            ResetTerminal();
+
             LightTable(all_taps);
         }
 
@@ -580,6 +677,8 @@ int main ()
         // anything else is wrong, retry
         else
         {
+            ResetTerminal();
+
             std::cout << "\nInvalid choice!\n";
         }
 
@@ -592,6 +691,7 @@ int main ()
 Notes
     Issues:
         Insertion is replacing a current tap instead of inserting in between (FIXED)
+        Chain size being negative. Needs statement for making sure it's larger than 2
 
     Things to add:
         High Priority:
@@ -601,6 +701,9 @@ Notes
                 Tap reccomendation inside insertion and replacement functions
 
             In-progress
+                Reseting/clearing terminal to show only what is being dealt with
+                    IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
+                    This would need signal handlers to go back to menu
 
             Done
                 Main line light level prompt
@@ -618,9 +721,6 @@ Notes
                     Needs to be checked for correct calculation
         
         Low priority:
-            Reseting/clearing terminal to show only what is being dealt with
-                IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
-                This would need signal handlers to go back to menu
             Make clearing the chain a function call
             Clear temp chains used to insert and replace taps
             Delete tap
