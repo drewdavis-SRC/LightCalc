@@ -493,10 +493,16 @@ int main ()
 
     // initialize, explain, and receive main light level
     float main_light_level;
-    std::cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
+    std::cout << "Main line light levels are usually 1-3 dB. This is needed to make proper calculations.";
     std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
     std::cout << "\nEnter the main line light level: ";
     std::cin >> main_light_level;
+
+    // add something here that deletes above output
+    // ANSI escape codes
+    // 033[F moves the cursor back to the start of the line
+    // 033[K clears the line
+    // std::cout << "\033[F\033[K";
     
     // intialize menu choice
     int choice;
