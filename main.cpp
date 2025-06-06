@@ -704,6 +704,7 @@ Notes
                 Reseting/clearing terminal to show only what is being dealt with
                     IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
                     This would need signal handlers to go back to menu
+                    Some functions need to pause and wait for user to be done viewing
 
             Done
                 Main line light level prompt
