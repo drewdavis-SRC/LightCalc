@@ -101,7 +101,6 @@ void ChainCreationTitle()
     std::cout << "=======================";
     std::cout << "\nChain Creation Selected";
     std::cout << "\n=======================";
-    std::cout << std::endl;
 }
 
 void ViewChainTitle()
@@ -109,7 +108,6 @@ void ViewChainTitle()
     std::cout << "===================";
     std::cout << "\nChain View Selected";
     std::cout << "\n===================";
-    std::cout << std::endl;
 }
 
 void ClearChainTitle()
@@ -125,8 +123,9 @@ void TapInsertionTitle()
     std::cout << "\nTap Insertion Selected";
     std::cout << "\n======================";
 
-    std::cout << "\n\nThe current chain is shown below.\n";
-    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
+    std::cout << "\n\nThe current chain is shown below.";
+
+    std::cout << "\n\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
     std::cout << "--------------------------------------------------------------------\n";
 }
 
@@ -136,9 +135,9 @@ void TapReplacementTitle()
     std::cout << "\nTap Replacement Selected";
     std::cout << "\n========================";
 
-    std::cout << "\n\nThe current chain is shown below.\n";
+    std::cout << "\n\nThe current chain is shown below.";
 
-    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
+    std::cout << "\n\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
     std::cout << "--------------------------------------------------------------------\n";
 }
 
@@ -147,9 +146,8 @@ void LossCalculationTitle()
     std::cout << "===============================";
     std::cout << "\nLight Loss Calculaiton Selected";
     std::cout << "\n===============================";
-    std::cout << std::endl;
 
-    std::cout << "\nPosition | Ports | Tap Value (dB) | Footage (ft) | Main Light Level (dB) | Drop Light Level (dB)\n";
+    std::cout << "\n\nPosition | Ports | Tap Value (dB) | Footage (ft) | Main Light Level (dB) | Drop Light Level (dB)\n";
     std::cout << "--------------------------------------------------------------------------------------------------\n";
 }
 
@@ -174,7 +172,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
     // initialize and receive number of taps in the chain for iteration
     int num_taps;
-    std::cout << "\nEnter number of taps in chain: ";
+    std::cout << "\n\nEnter number of taps in chain: ";
     std::cin >> num_taps;
 
     // reset to save space in terminal
@@ -188,7 +186,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
     {
         // tell user which tap they're creating in the chain
         bool is_last = (i == num_taps - 1);
-        std::cout << "\n==== Tap " << i + 1 << "/" << num_taps << " ====\n";
+        std::cout << "\n\n==== Tap " << i + 1 << "/" << num_taps << " ====\n";
         
         // select port count of tap
         int port_count;
@@ -283,7 +281,7 @@ void ViewChain(const vector<Tap>& chain, float main_light_level)
     ViewChainTitle();
 
     // output columns and divider
-    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
+    std::cout << "\n\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB) | Terminating\n";
     std::cout << "----------------------------------------------------------------------------------\n";
     
     // iterate through current chain
