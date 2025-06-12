@@ -144,7 +144,7 @@ void TapReplacementTitle()
 void LossCalculationTitle()
 {
     std::cout << "===============================";
-    std::cout << "\nLight Loss Calculaiton Selected";
+    std::cout << "\nLight Loss Calculation Selected";
     std::cout << "\n===============================";
 
     std::cout << "\n\nPosition | Ports | Tap Value (dB) | Footage (ft) | Main Light Level (dB) | Drop Light Level (dB)\n";
@@ -362,7 +362,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         // wrong input message
         std::cout << "\nInvalid position! Resetting to menu.";
 
-        // sim prcoessing
+        // sim processing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -399,7 +399,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         // wrong input message
         std::cout << "\nNo valid taps! Resetting to menu.";
 
-        // sim prcoessing
+        // sim processing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -428,7 +428,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         // wrong input message
         std::cout << "\nInvalid choice! Resetting to menu.";
 
-        // sim prcoessing
+        // sim processing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -497,7 +497,7 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         // wrong input message
         std::cout << "\nInvalid position! Resetting to menu.";
 
-        // sim prcoessing
+        // sim processing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -528,7 +528,7 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         // wrong input msg
         std::cout << "\nNo valid taps! Resetting to menu.";
 
-        // sim prcoessing
+        // sim processing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -558,7 +558,7 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         // wrong input message
         std::cout << "\nInvalid choice! Resetting to menu.";
 
-        // sim prcoessing
+        // sim processing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -863,7 +863,7 @@ int main()
             ResetTerminal();
         }
 
-    } while (choice != 8); // do until exit (8) is choosen
+    } while (choice != 8); // do until exit (8) is chosen
 
     return 0;
 }
@@ -881,7 +881,7 @@ Notes
             Invalid choice on menu (FIXED)
                 Shows it's invalid -> Sleep -> ResetTerminal
 
-            No chain made before using fetures (FIXED)
+            No chain made before using features (FIXED)
                 Create function for checking that allows for similar output
                 to invalid choice menu
                     This allows the menu to stay at the top keeping functionality the same
@@ -902,7 +902,7 @@ Notes
             Need to start
                 GUI
                 When a tap value dB is entered that's outside port count parameters, dont go back to port count selection
-                Tap reccomendation inside insertion and replacement functions
+                Tap reccommendation inside insertion and replacement functions
 
             In-progress
 
@@ -913,7 +913,7 @@ Notes
 
                 Main line light level changing from tap to tap based off the table 
 
-                Light level at drops chagning based off the table 
+                Light level at drops changing based off the table 
 
                 Main line and drop light levels changing when tap inserted 
 
