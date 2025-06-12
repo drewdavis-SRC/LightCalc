@@ -367,11 +367,11 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 
     // get position from user for insertion
     int position;
-    std::cout << "\nInsert position (1-" << chain.size()+1 << "): ";
+    std::cout << "\nInsert position (1 - " << chain.size() + 1 << "): ";
     std::cin >> position;
 
     // make sure position cannot be outside the range of the chain
-    if (position < 1 || position > chain.size()+1) 
+    if (position < 1 || position > chain.size() + 1) 
     {
         // wrong input message
         std::cout << "\nInvalid position!";
@@ -509,11 +509,11 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 
     // get the position for replacement
     int position;
-    std::cout << "\nEnter the position of the tap to replace: ";
+    std::cout << "\nReplace position (1 - " << chain.size() << "): ";
     std::cin >> position;
 
     // dont let position go out of range
-    if (position < 1 || position > chain.size()+1) 
+    if (position < 1 || position > chain.size() + 1) 
     {
         // wrong input message
         std::cout << "\nInvalid position!";
@@ -568,7 +568,7 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 
     for (size_t j = 0; j < available.size(); j++) 
     {
-        std::cout << j+1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
+        std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
                 << available[j].max_insertion_loss << " dB)\n";
     }
 
