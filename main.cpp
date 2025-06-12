@@ -206,7 +206,6 @@ void LightTableTitle()
 
 vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 {
-
     ChainCreationTitle();
 
     // initialize chain to store user selection
@@ -219,17 +218,16 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         std::cout << "\n\nEnter number of taps in chain: ";
         std::cin >> num_taps;
 
-        if (num_taps < 1)
+        if (num_taps < 2)
         {
             // reset terminal and call title again to display error above prompt
             ResetTerminal();
             ChainCreationTitle();
 
             // wrong msg
-            std::cout << "\nChain size must be 2 or larger. Retry.";
+            std::cout << "\n\nChain size must be 2 or larger. Retry.";
             continue;
         }
-
         break;
     }
     // reset to save space in terminal
@@ -237,6 +235,9 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
     // call the title again
     ChainCreationTitle();
+
+    // reprint user choice
+    std::cout << "\n\nEnter number of taps in chain: " << num_taps;
 
     // create taps for the amount entered
     for (int i = 0; i < num_taps; i++)
@@ -268,6 +269,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             ResetTerminal();
             ChainCreationTitle();
 
+            std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+
             std::cout << "\n\nThere are no vaild taps with that port count.";
 
             // decrement i so we go until we correctly fill the current tap
@@ -277,34 +280,40 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             continue;
         }
 
-        // display tap options by iterating through available vector
-        std::cout << "\nAvailable taps:\n";
-        for (size_t j = 0; j < available.size(); j++) 
-        {
-            std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
-                 << available[j].max_insertion_loss << " dB)\n";
-        }
-
-        // get selection of the tap value
+        // initialize choice and start loop
         int choice;
-        std::cout << "\nChoose tap: ";
-        std::cin >> choice;
-
-        // if the user enters an invalid number
-        if (choice < 1 || choice > available.size()) 
+        while (true)
         {
-            // reset terminal and call feature menu again
-            ResetTerminal();
-            ChainCreationTitle();
+            // display tap options by iterating through available vector
+            std::cout << "\nAvailable taps:\n";
+            for (size_t j = 0; j < available.size(); j++) 
+            {
+                std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
+                    << available[j].max_insertion_loss << " dB)\n";
+            }
+            
+            std::cout << "\nChoose tap: ";
+            std::cin >> choice;
 
-            // tell user they chose an invalid tap value
-            std::cout << "\n\nInvalid tap value. Restarting.";
+            // if the user enters an invalid number
+            if (choice < 1 || choice > available.size()) 
+            {
+                // reset terminal and call feature menu again
+                ResetTerminal();
+                ChainCreationTitle();
 
-            // decrement so we are filling the same tap
-            i--;
+                std::cout << "\n\nEnter port count (2/4/8): " << port_count;
 
-            // continue loop
-            continue;
+                // tell user they chose an invalid tap value
+                std::cout << "\n\nInvalid tap value. Retry.\n";
+
+                // decrement so we are filling the same tap
+                i--;
+
+                // continue loop
+                continue;
+            }
+            break;
         }
 
         // fill user chain with the choice
@@ -1022,6 +1031,8 @@ Notes
             Start program in fullscreen
         
         Not Fixed:
+            Chainc reation clear message needs to be below chain creation title
+
             Chain size being negative. Needs statement for making sure it's larger than 2
 
             While or for loop needed for tap value choice
