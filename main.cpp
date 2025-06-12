@@ -389,6 +389,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 
     // this is here for if the user isn't in full screen to prevent not clearing 
     // things written when the terminal scrolls from writing. full screen does not look great
+    // temp fix, some equal signs still get written above next menu output
     ResetTerminal();
 
     // initalize new variable that holds the choice
@@ -498,6 +499,7 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 
     // this is here for if the user isn't in full screen to prevent not clearing 
     // things written when the terminal scrolls from writing. full screen does not look great
+    // temp fix, some equal signs still get written above next menu output
     ResetTerminal();
 
     // replace old tap with new
@@ -758,6 +760,7 @@ Notes
         While or for loop needed for tap value choice
         Terminal reset has problems with not functioning correctly when zooming in
         and when what's being written makes the terminal scroll
+            ResetTerminal() needs to just reset everything written. look into behavior of function and library
 
     Things to add:
         High Priority:
