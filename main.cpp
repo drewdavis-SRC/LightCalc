@@ -326,11 +326,9 @@ void ClearChain(vector <Tap>& chain)
     chain.clear();
 
     // output the chain is clear
-    std::cout << "Chain is now clear.";
+    std::cout << "Chain is now clear. Resetting to menu.";
 
     // simulate processing so user can see something happened
-    sleep(2);
-    std::cout << "\n\nProceeding back to menu.";
     sleep(1);
     std::cout << ".";
     sleep(1);
@@ -374,11 +372,9 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     if (position < 1 || position > chain.size() + 1) 
     {
         // wrong input message
-        std::cout << "\nInvalid position!";
+        std::cout << "\nInvalid position! Resetting to menu.";
 
-        //simulate processing so user can see what happened
-        sleep(2);
-        std::cout << "\n\nProceeding back to menu.";
+        // sim prcoessing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -413,11 +409,9 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     if (available.empty()) 
     {
         // wrong input message
-        std::cout << "\nNo valid taps!";
-        
-        //simulate processing so user can see what happened
-        sleep(2);
-        std::cout << "\n\nProceeding back to menu.";
+        std::cout << "\nNo valid taps! Resetting to menu.";
+
+        // sim prcoessing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -431,7 +425,8 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     std::cout << "\nAvailable taps:\n";
     for (size_t i = 0; i < available.size(); i++) 
     {
-        std::cout << i + 1 << ". " << available[i].tap_value_db << " dB\n";
+        std::cout << i + 1 << ". " << available[i].tap_value_db << " dB (Max Insertion Loss: " 
+                << available[i].max_insertion_loss << " dB)\n";;
     }
 
     // get tap value choice
@@ -443,11 +438,9 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     if (choice < 1 || choice > available.size()) 
     {
         // wrong input message
-        std::cout << "\nInvalid!";
-        
-        //simulate processing so user can see what happened
-        sleep(2);
-        std::cout << "\n\nProceeding back to menu.";
+        std::cout << "\nInvalid choice! Resetting to menu.";
+
+        // sim prcoessing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -470,11 +463,9 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     chain.insert(chain.begin() + position, new_tap);
 
     // show user insertion was successful
-    std::cout << "\nTap inserted successfully!";
-    
-    // simulate processing so user can see what happened
-    sleep(2);
-    std::cout << "\n\nProceeding back to menu.";
+    std::cout << "\nTap inserted successfully! Resetting to menu.";
+
+    // sim processing
     sleep(1);
     std::cout << ".";
     sleep(1);
@@ -496,11 +487,11 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         std::cout << i + 1;
         std::cout << "        | ";
         std::cout << t.port_count;
-        std::cout << " dB          | ";        
+        std::cout << " dB  | ";        
         std::cout << t.tap_value_db;
         std::cout << " dB    | ";
         std::cout << t.max_insertion_loss;
-        std::cout << "             | ";
+        std::cout << "               | ";
         std::cout << t.max_drop_loss;
         std::cout << std::endl;
     }
@@ -516,11 +507,9 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     if (position < 1 || position > chain.size() + 1) 
     {
         // wrong input message
-        std::cout << "\nInvalid position!";
+        std::cout << "\nInvalid position! Resetting to menu.";
 
         // sim prcoessing
-        sleep(2);
-        std::cout << "\n\nProceeding back to menu.";
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -549,11 +538,9 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     if (available.empty()) 
     {
         // wrong input msg
-        std::cout << "\nNo valid taps! Retry.";
-                
-        //simulate processing so user can see what happened
-        sleep(2);
-        std::cout << "\n\nProceeding back to menu.";
+        std::cout << "\nNo valid taps! Resetting to menu.";
+
+        // sim prcoessing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -580,12 +567,10 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     // dont let it be outside range of vector
     if (choice < 1 || choice > available.size())
     {
-        // wrong input msg
-        std::cout << "\nInvalid!";
-                
-        //simulate processing so user can see what happened
-        sleep(2);
-        std::cout << "\n\nProceeding back to menu.";
+        // wrong input message
+        std::cout << "\nInvalid choice! Resetting to menu.";
+
+        // sim prcoessing
         sleep(1);
         std::cout << ".";
         sleep(1);
@@ -598,12 +583,10 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     // replace old tap with new
     chain[position] = available[choice - 1];
 
-    // show user insertion was successful
-    std::cout << "\nTap replaced successfully!";
-    
-    // simulate processing so user can see what happened
-    sleep(2);
-    std::cout << "\n\nProceeding back to menu.";
+    // show user replacement was successful
+    std::cout << "\nTap replaced successfully! Resetting to menu.";
+
+    // sim processing
     sleep(1);
     std::cout << ".";
     sleep(1);
@@ -752,7 +735,7 @@ int main()
             if (current_chain.empty())
             {
                 // sim processing
-                std::cout << "\nPlease create a chain first. Resetting.";
+                std::cout << "\nPlease create a chain first. Resetting menu.";
                 sleep(1);
                 std::cout << ".";
                 sleep(1);
@@ -776,7 +759,7 @@ int main()
             if (current_chain.empty())
             {
                 // sim processing
-                std::cout << "\nPlease create a chain first. Resetting.";
+                std::cout << "\nPlease create a chain first. Resetting menu.";
                 sleep(1);
                 std::cout << ".";
                 sleep(1);
@@ -800,7 +783,7 @@ int main()
             if (current_chain.empty())
             {
                 // sim processing
-                std::cout << "\nPlease create a chain first. Resetting.";
+                std::cout << "\nPlease create a chain first. Resetting menu.";
                 sleep(1);
                 std::cout << ".";
                 sleep(1);
@@ -824,7 +807,7 @@ int main()
             if (current_chain.empty())
             {
                 // sim processing
-                std::cout << "\nPlease create a chain first. Resetting.";
+                std::cout << "\nPlease create a chain first. Resetting menu.";
                 sleep(1);
                 std::cout << ".";
                 sleep(1);
@@ -848,7 +831,7 @@ int main()
             if (current_chain.empty())
             {
                 // sim processing
-                std::cout << "\nPlease create a chain first. Resetting.";
+                std::cout << "\nPlease create a chain first. Resetting menu.";
                 sleep(1);
                 std::cout << ".";
                 sleep(1);
@@ -883,7 +866,7 @@ int main()
         else
         {
             // sim processing
-            std::cout << "\nInvalid choice! Resetting.";
+            std::cout << "\nInvalid choice! Resetting menu.";
             sleep(1);
             std::cout << ".";
             sleep(1);
