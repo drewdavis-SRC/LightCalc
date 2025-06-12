@@ -884,11 +884,28 @@ int main()
 Notes
     Issues:
         Insertion is replacing a current tap instead of inserting in between (FIXED)
+
         Chain size being negative. Needs statement for making sure it's larger than 2
+
         While or for loop needed for tap value choice
+
         Terminal reset has problems with not functioning correctly when zooming in
         and when what's being written makes the terminal scroll
             ResetTerminal() needs to just reset everything written. look into behavior of function and library
+
+        View Chain (FIXED)
+        Needs to be handled to show until user wants to proceed,
+        reset terminal, then proceed
+
+        Invalid choice on menu (FIXED)
+            Shows it's invalid -> Sleep -> ResetTerminal
+
+        No chain made before using fetures (FIXED)
+            Create function for checking that allows for similar output
+            to invalid choice menu
+                This allows the menu to stay at the top keeping functionality the same
+
+        Start program in fullscreen (FIXED)
 
     Things to add:
         High Priority:
@@ -898,39 +915,43 @@ Notes
                 Tap reccomendation inside insertion and replacement functions
 
             In-progress
+
+            Done
+                Main line light level prompt
+
+                Light level at drops 
+
+                Main line light level changing from tap to tap based off the table 
+
+                Light level at drops chagning based off the table 
+
+                Main line and drop light levels changing when tap inserted 
+
+                Rework loss calculation 
+                
+                Insertion needs to refactor light loss on the whole chain *
+                    * Calling calculate loss is working with inserted and replaced taps
+                                Footage loss between taps; 0.0001 db/ft
+
+                Insertion loss; approx 0.06 db/tap *
+                    Needs to be checked for correct calculation
+
+                Typical loss for bulk head; 0.2-0.3 db *
+                    Needs to be checked for correct calculation
+
                 Reseting/clearing terminal to show only what is being dealt with
                     IE: Menu being shown -> Option selected -> Menu is cleared from terminal history and shows interface of option
                     This would need signal handlers to go back to menu
                     Some functions need to pause and wait for user to be done viewing
-
-            Done
-                Main line light level prompt
-                Light level at drops 
-                Main line light level changing from tap to tap based off the table 
-                Light level at drops chagning based off the table 
-                Main line and drop light levels changing when tap inserted 
-                Rework loss calculation 
-                Insertion needs to refactor light loss on the whole chain *
-                    * Calling calculate loss is working with inserted and replaced taps
-                                Footage loss between taps; 0.0001 db/ft
-                Insertion loss; approx 0.06 db/tap *
-                    Needs to be checked for correct calculation
-                Typical loss for bulk head; 0.2-0.3 db *
-                    Needs to be checked for correct calculation
         
         Low priority:
-            Make clearing the chain a function call (DONE)
-            Clear temp chains used to insert and replace taps
-            Delete tap function
+            Need to start
+                Clear temp chains used to insert and replace taps
 
-Whitespace Fixes
-    View Chain
-        Needs to be handled to show until user wants to proceed,
-        reset terminal, then proceed
-    Invalid choice on menu
-        Shows it's invalid -> Sleep -> ResetTerminal
-    No chain made before using fetures
-        Create function for checking that allows for similar output
-        to invalid choice menu
-            This allows the menu to stay at the top keeping functionality the same
+                Delete tap function
+
+            In-progress
+
+            Done
+                Make clearing the chain a function call
 */
