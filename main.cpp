@@ -384,11 +384,21 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
             TapInsertionTaps(chain);
             
             // wrong input message
-            std::cout << "\nInvalid position! Retry.\n";
+            std::cout << "\nERROR: Invalid position! Retry.\n";
 
             // continue loop
             continue;
         }
+
+        // reset terminal and call everything above again
+        // this is to get rid of error messages
+        ResetTerminal();
+        TapInsertionTitle();
+        TapInsertionTaps(chain);
+
+        // show previous choices
+        std::cout << "\nInsert position (1 - " << chain.size() + 1 << "): " << position << "\n";
+
         break;
     }
 
@@ -420,45 +430,67 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         // if available is empty, port count was wrong
         if (available.empty()) 
         {
-            // wrong input message
-            std::cout << "\nNo valid taps with that port count! Retry.";
-
             // clear available chain since we're calling it again
             available.clear();
+
+            // reset terminal and call everything above again
+            ResetTerminal();
+            TapInsertionTitle();
+            TapInsertionTaps(chain);
+
+            // show previous position that was chosen
+            std::cout << "\nInsert position (1 - " << chain.size() + 1 << "): " << position + 1 << "\n";
+
+            // wrong input message
+            std::cout << "\nERROR: No valid taps with that port count! Retry.\n";
 
             // continue loop
             continue;
         }
 
+        // reset terminal and call everything above again
+        // this is to get rid of error messages
+        ResetTerminal();
+        TapInsertionTitle();
+        TapInsertionTaps(chain);
+
+        // show previous choices
+        std::cout << "\nInsert position (1 - " << chain.size() + 1 << "): " << position + 1 << "\n";
+        std::cout << "\nPort count (2/4/8): " << port_count << "\n";
+
         // leave loop once valid port count is 
         break;
-    }
-
-    // show all choices for insertion based off port count
-    std::cout << "\nAvailable taps:\n";
-    for (size_t i = 0; i < available.size(); i++) 
-    {
-        std::cout << i + 1 << ". " << available[i].tap_value_db << " dB (Max Insertion Loss: " 
-                << available[i].max_insertion_loss << " dB)\n";;
     }
 
     // get tap value choice
     int choice;
     while (true)
     {
+        // show all choices for insertion based off port count
+        std::cout << "\nAvailable taps:\n";
+        for (size_t i = 0; i < available.size(); i++) 
+        {
+            std::cout << i + 1 << ". " << available[i].tap_value_db << " dB (Max Insertion Loss: " 
+                    << available[i].max_insertion_loss << " dB)\n";;
+        }
+
         std::cout << "\nChoose tap: ";
         std::cin >> choice;
 
         // dont let the choice be out of range
         if (choice < 1 || choice > available.size()) 
         {
-            // wrong input message
-            std::cout << "\nInvalid choice! Retry.";
+            // reset terminal and call everything above again
+            ResetTerminal();
+            TapInsertionTitle();
+            TapInsertionTaps(chain);
 
-            // sim processing
-            sleep(1);
-            std::cout << ".\n";
-            sleep(1);
+            // show previous position and port count that were chosen
+            std::cout << "\nInsert position (1 - " << chain.size() + 1 << "): " << position + 1 << "\n";
+            std::cout << "\nPort count (2/4/8): " << port_count << "\n";
+
+            // wrong input message
+            std::cout << "\nERROR: Invalid choice! Retry.\n";
 
             // continue loop
             continue;
