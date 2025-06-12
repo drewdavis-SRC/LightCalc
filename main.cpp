@@ -872,21 +872,21 @@ int main()
 Notes
     Issues:
         Fixed:
-            Insertion is replacing a current tap instead of inserting in between (FIXED)
+            Insertion is replacing a current tap instead of inserting in between
 
-            View Chain (FIXED)
+            View Chain
             Needs to be handled to show until user wants to proceed,
             reset terminal, then proceed
 
-            Invalid choice on menu (FIXED)
+            Invalid choice on menu
                 Shows it's invalid -> Sleep -> ResetTerminal
 
-            No chain made before using features (FIXED)
+            No chain made before using features
                 Create function for checking that allows for similar output
                 to invalid choice menu
                     This allows the menu to stay at the top keeping functionality the same
 
-            Start program in fullscreen (FIXED)
+            Start program in fullscreen
         
         Not Fixed:
             Chain size being negative. Needs statement for making sure it's larger than 2
@@ -901,7 +901,9 @@ Notes
         High Priority:
             Need to start
                 GUI
+
                 When a tap value dB is entered that's outside port count parameters, dont go back to port count selection
+                
                 Tap reccommendation inside insertion and replacement functions
 
             In-progress
