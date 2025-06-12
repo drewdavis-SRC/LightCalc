@@ -70,7 +70,7 @@ vector<Tap> populateTaps()
 
 void MainLightQuestion()
 {
-    std::cout << "** NOTE: Use fullscreen for the best performance.";
+    std::cout << "** NOTE: Use fullscreen for the best performance.\n";
     std::cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
     std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
     std::cout << "\nEnter the main line light level: ";
