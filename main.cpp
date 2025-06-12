@@ -20,6 +20,12 @@ void ResetTerminal()
     SetConsoleCursorPosition(hStdOut, coord);
 }
 
+void simulateF11()
+{
+    keybd_event(VK_F11, 0, 0, 0);
+    keybd_event(VK_F11, 0, KEYEVENTF_KEYUP, 0);
+}
+
 struct Tap 
 {
     // values needed for each tap
@@ -70,7 +76,6 @@ vector<Tap> populateTaps()
 
 void MainLightQuestion()
 {
-    std::cout << "** NOTE: Use fullscreen for the best performance.\n";
     std::cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
     std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
     std::cout << "\nEnter the main line light level: ";
@@ -559,7 +564,7 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     }
 
     // display available taps
-    std::cout << "Available taps:\n";
+    std::cout << "\nAvailable taps:\n";
 
     for (size_t j = 0; j < available.size(); j++) 
     {
@@ -654,6 +659,13 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
 
         std::cout << std::endl;
     }
+
+    // wait for user to be done viewing
+    std::cout << std::endl;
+    system("pause");
+
+    // remove everything from terminal for cleanliness
+    ResetTerminal();
 }
 
 void LightTable(const vector <Tap>& chain)
@@ -687,7 +699,16 @@ void LightTable(const vector <Tap>& chain)
 
 int main()
 {
+    // make program start in fullscreen
+    simulateF11();
+
+    // reset incase program is run from vs code terminal
     ResetTerminal();
+
+    std::cout << "** NOTES: - Fullscreen is being used for the best performance.\n"
+                        << "          - Press 'CTL + C' to force quit at any time.\n"
+                        << "          - Press 'F11' to remove fullscreen mode.\n";
+
 
     // initalize all taps and chain for the user
     vector<Tap> all_taps = populateTaps();
