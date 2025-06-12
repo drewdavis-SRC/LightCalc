@@ -255,16 +255,6 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
 void CreationClear(vector <Tap>& chain)
 {
-    // removed empty check since this will only execute if the chain is not empty
-    /*
-    // make sure we dont clear a chain that hasn't been created
-    if (chain.empty())
-    {
-        std::cout << "Please create a chain first.\n\n";
-        return;
-    }
-    */
-
     // show how many taps will be cleared
     std::cout << "Clearing previous chain with " << chain.size() << " taps. ";
 
@@ -881,35 +871,37 @@ int main()
 /*
 Notes
     Issues:
-        Insertion is replacing a current tap instead of inserting in between (FIXED)
+        Fixed:
+            Insertion is replacing a current tap instead of inserting in between (FIXED)
 
-        Chain size being negative. Needs statement for making sure it's larger than 2
+            View Chain (FIXED)
+            Needs to be handled to show until user wants to proceed,
+            reset terminal, then proceed
 
-        While or for loop needed for tap value choice
+            Invalid choice on menu (FIXED)
+                Shows it's invalid -> Sleep -> ResetTerminal
 
-        Terminal reset has problems with not functioning correctly when zooming in
-        and when what's being written makes the terminal scroll
-            ResetTerminal() needs to just reset everything written. look into behavior of function and library
+            No chain made before using fetures (FIXED)
+                Create function for checking that allows for similar output
+                to invalid choice menu
+                    This allows the menu to stay at the top keeping functionality the same
 
-        View Chain (FIXED)
-        Needs to be handled to show until user wants to proceed,
-        reset terminal, then proceed
+            Start program in fullscreen (FIXED)
+        
+        Not Fixed:
+            Chain size being negative. Needs statement for making sure it's larger than 2
 
-        Invalid choice on menu (FIXED)
-            Shows it's invalid -> Sleep -> ResetTerminal
+            While or for loop needed for tap value choice
 
-        No chain made before using fetures (FIXED)
-            Create function for checking that allows for similar output
-            to invalid choice menu
-                This allows the menu to stay at the top keeping functionality the same
-
-        Start program in fullscreen (FIXED)
+            Terminal reset has problems with not functioning correctly when zooming in
+            and when what's being written makes the terminal scroll
+                ResetTerminal() needs to just reset everything written. look into behavior of function and library
 
     Things to add:
         High Priority:
             Need to start
                 GUI
-                When a tap value dB is entered that's outside port copunt parameters, dont go back to port count selection
+                When a tap value dB is entered that's outside port count parameters, dont go back to port count selection
                 Tap reccomendation inside insertion and replacement functions
 
             In-progress
