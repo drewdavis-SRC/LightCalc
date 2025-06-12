@@ -214,9 +214,24 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
     // initialize and receive number of taps in the chain for iteration
     int num_taps;
-    std::cout << "\n\nEnter number of taps in chain: ";
-    std::cin >> num_taps;
+    while (true)
+    {
+        std::cout << "\n\nEnter number of taps in chain: ";
+        std::cin >> num_taps;
 
+        if (num_taps < 1)
+        {
+            // reset terminal and call title again to display error above prompt
+            ResetTerminal();
+            ChainCreationTitle();
+
+            // wrong msg
+            std::cout << "\nChain size must be 2 or larger. Retry.";
+            continue;
+        }
+
+        break;
+    }
     // reset to save space in terminal
     ResetTerminal();
 
