@@ -70,7 +70,8 @@ vector<Tap> populateTaps()
 
 void MainLightQuestion()
 {
-    std::cout << "Main line light levels are usually 1-3 dB. This is needed to make proper calculations.";
+    std::cout << "** NOTE: Use fullscreen for the best performance.";
+    std::cout << "\nMain line light levels are usually 1-3 dB. This is needed to make proper calculations.";
     std::cout << "\nThe program is able to handle numbers up to 2 decimal places (IE: 2.45).\n";
     std::cout << "\nEnter the main line light level: ";
 }
@@ -280,6 +281,11 @@ void ViewChain(const vector<Tap>& chain, float main_light_level)
         std::cout << (t.is_terminating ? "Yes" : "No");
         std::cout << std::endl;
     }
+
+    std::cout << std::endl;
+    system("pause");
+
+    ResetTerminal();
 }
 
 void ClearChain(vector <Tap>& chain)
@@ -387,11 +393,6 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         return;
     }
 
-    // this is here for if the user isn't in full screen to prevent not clearing 
-    // things written when the terminal scrolls from writing. full screen does not look great
-    // temp fix, some equal signs still get written above next menu output
-    ResetTerminal();
-
     // initalize new variable that holds the choice
     Tap new_tap = available[choice-1];
 
@@ -497,11 +498,6 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         return;
     }
 
-    // this is here for if the user isn't in full screen to prevent not clearing 
-    // things written when the terminal scrolls from writing. full screen does not look great
-    // temp fix, some equal signs still get written above next menu output
-    ResetTerminal();
-
     // replace old tap with new
     chain[position] = available[choice - 1];
 
@@ -584,6 +580,11 @@ void LightTable(const vector <Tap>& chain)
         std::cout << (t.is_terminating ? "Yes" : "No");
         std::cout << std::endl;
     }
+
+    std::cout << std::endl;
+    system("pause");
+
+    ResetTerminal();
 }
 
 int main()
