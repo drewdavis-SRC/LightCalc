@@ -195,6 +195,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         
         // create new vector and fill it with taps of the selected port count
         vector<Tap> available;
+
         for (const Tap& t : all_taps) 
         {
             if (t.port_count == port_count)
@@ -210,7 +211,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             ResetTerminal();
             ChainCreationTitle();
 
-            std::cout << "\nThere are no vaild taps with that port count.\n";
+            std::cout << "\n\nThere are no vaild taps with that port count.";
 
             // decrement i so we go until we correctly fill the current tap
             i--;
@@ -235,13 +236,16 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         {
             ResetTerminal();
             ChainCreationTitle();
-            std::cout << "\nInvalid tap value. Restarting.\n";
+            std::cout << "\n\nInvalid tap value. Restarting.";
             i--;
             continue;
         }
 
         // fill user chain with the choice
         chain.push_back(available[choice-1]);
+
+        // clear available vector
+        available.clear();
 
         // reset the terminal and call the title again so we dont scroll on the terminal
         ResetTerminal();
@@ -453,6 +457,9 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     // show user insertion was successful
     std::cout << "\nTap inserted successfully! Resetting to menu.";
 
+    // clear available vector
+    available.clear();
+
     // sim processing
     sleep(1);
     std::cout << ".";
@@ -573,6 +580,9 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 
     // show user replacement was successful
     std::cout << "\nTap replaced successfully! Resetting to menu.";
+
+    // clear available vector
+    available.clear();
 
     // sim processing
     sleep(1);
@@ -847,6 +857,11 @@ int main()
         // choice 8 (exit message)
         else if (choice == 8)
         {
+            // clear vectors before ending
+            current_chain.clear();
+            all_taps.clear();
+
+            // exit message
             std::cout << "\nExiting...\n";
         }
 
@@ -902,11 +917,10 @@ Notes
             Need to start
                 GUI
 
-                When a tap value dB is entered that's outside port count parameters, dont go back to port count selection
-                
                 Tap reccommendation inside insertion and replacement functions
 
             In-progress
+                When a tap value dB is entered that's outside port count parameters, dont go back to port count selection
 
             Done
                 Main line light level prompt
