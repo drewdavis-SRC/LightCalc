@@ -1096,7 +1096,8 @@ Notes
             Need to start
                 GUI
 
-                Tap reccommendation inside insertion and replacement functions
+                Tap reccommendation
+                    Could be standalone feature or inside insertion and replacement function
 
             In-progress
 
