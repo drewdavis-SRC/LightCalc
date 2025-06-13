@@ -342,12 +342,8 @@ void CreationClear(vector <Tap>& chain)
     // show how many taps will be cleared
     std::cout << "\nClearing previous chain with " << chain.size() << " taps.";
     sleep(1);
-
-    for (int i = 0; i < chain.size(); i++)
-    {
-        std::cout << ".";
-        sleep(1);
-    }
+    std::cout << ".";
+    sleep(1);
 
     // clear taps in the chain
     chain.clear();
@@ -405,13 +401,8 @@ void ClearChain(vector <Tap>& chain)
     // show how many taps will be cleared
     std::cout << "\n\nClearing previous chain with " << chain.size() << " taps.";
     sleep(1);
-
-    // sim deletion
-    for (int i = 0; i < chain.size(); i++)
-    {
-        std::cout << ".";
-        sleep(1);
-    }
+    std::cout << ".";
+    sleep(1);
 
     // clear taps in the chain
     chain.clear();
@@ -807,7 +798,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
         std::cout << main_light_level - t.max_drop_loss - splice_loss - bulkhead_loss; // calculate loss at the drop 
 
         // update main level for loss between next tap
-        float temp = main_light_level;
+        float temp = main_light_level - footage_loss;
         temp = temp - t.max_insertion_loss;
         main_light_level = temp;
 
@@ -1091,10 +1082,14 @@ Notes
             and when what's being written makes the terminal scroll
                 ResetTerminal() needs to just reset everything written. look into behavior of function and library
 
+            Main Light Level is resetting back to first input after first tap
+
     Things to add:
         High Priority:
             Need to start
                 GUI
+
+                Save footage entered from user for ease of use
 
                 Tap reccommendation
                     Could be standalone feature or inside insertion and replacement functions
