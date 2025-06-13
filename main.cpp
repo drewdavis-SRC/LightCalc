@@ -1083,10 +1083,10 @@ Notes
             Start program in fullscreen
 
             Chain size being negative. Needs statement for making sure it's larger than 2
+
+            Chain creation clear message needs to be below chain creation title
         
         Not Fixed:
-            Chain creation clear message needs to be below chain creation title
-
             Terminal reset has problems with not functioning correctly when zooming in
             and when what's being written makes the terminal scroll
                 ResetTerminal() needs to just reset everything written. look into behavior of function and library
