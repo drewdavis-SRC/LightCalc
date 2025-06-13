@@ -1097,7 +1097,7 @@ Notes
                 GUI
 
                 Tap reccommendation
-                    Could be standalone feature or inside insertion and replacement function
+                    Could be standalone feature or inside insertion and replacement functions
 
             In-progress
 
