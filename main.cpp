@@ -766,6 +766,7 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     int footage;
     float splice_loss = 0.06 * 2;
     float bulkhead_loss = 0.3;
+    float attenuation;
 
     // iterate through curent chain
     for (int i = 0; i < chain.size(); i++)
@@ -792,15 +793,17 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
         std::cout << t.tap_value_db;
         std::cout << "             | ";
         std::cout << footage;
-        std::cout << "          | ";
-        std::cout << main_light_level - footage_loss; // show the main level at the tap minus footage loss
-        std::cout << "                 | ";
-        std::cout << main_light_level - t.max_drop_loss - splice_loss - bulkhead_loss; // calculate loss at the drop 
 
-        // update main level for loss between next tap
-        float temp = main_light_level - footage_loss;
-        temp = temp - t.max_insertion_loss;
-        main_light_level = temp;
+        // calculate the attenuation on the main light level from the footage loss
+        attenuation = main_light_level - footage_loss;
+
+        std::cout << "          | ";
+        std::cout << attenuation; // show the main level at the tap minus footage loss
+        std::cout << "                 | ";
+        std::cout << attenuation - t.max_drop_loss - splice_loss - bulkhead_loss; // calculate loss at the drop 
+
+        // update main level for loss between next tap and the insertion loss
+        main_light_level = attenuation - t.max_insertion_loss;
 
         std::cout << std::endl;
     }
