@@ -316,7 +316,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             break;
         }
 
-        // fill user chain with the choice
+        // fill main chain with the user choice
         chain.push_back(available[choice-1]);
 
         // clear available vector
@@ -418,6 +418,138 @@ void ClearChain(vector <Tap>& chain)
 
     // recall menu
     MenuTitle();
+}
+
+void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
+{
+    TapReplacementTitle();
+
+    // get rid of table columns from title menu
+    std::cout << "\033[F\033[K";
+    std::cout << "\033[F\033[K";
+    std::cout << "\033[F\033[K";
+    std::cout << "\033[F\033[K";
+
+    // continuation message
+    std::cout << "Tap reccomendation based of changes has begun.\n\n";
+
+    // reshow chain
+    std::cout << "\n\nCurrent updated chain:";
+    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
+    std::cout << "--------------------------------------------------------------------\n";
+    TapReplacementTaps(chain);
+
+    // replace logic
+    int current_tap_value;
+    int previous_tap_value;
+
+    for (int i = 0; i < chain.size(); i++)
+    {
+        const Tap& t = chain[i];
+
+        current_tap_value = t.tap_value_db;
+
+        if (current_tap_value >= previous_tap_value)
+        {
+            std::cout << "\nChanges need to be made!";
+            std::cout << "\nTap " << i + 1 << " has a tap value of " << current_tap_value << " when the previous tap value is " << previous_tap_value << ".";
+
+            while (true)
+            {
+                // tell user which tap they're creating in the chain
+                std::cout << "\n\n==== Replacing Tap " << i + 1 << " ====\n";
+                
+                // select port count of tap
+                int port_count;
+                std::cout << "Enter port count (2/4/8): ";
+                std::cin >> port_count;
+                
+                // create new vector and fill it with taps of the selected port count
+                vector<Tap> available;
+
+                for (const Tap& t : all_taps) 
+                {
+                    if (t.port_count == port_count)
+                    {
+                        available.push_back(t);
+                    }
+                }
+
+                // if the available chian is empty, show in terminal and tell user they picked an invalid port count
+                if (available.empty()) 
+                {
+                    // reset terminal and call title to make error message be uniform
+                    ResetTerminal();
+                    TapReplacementTitle();
+
+                    // get rid of table columns from title menu
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+
+                    // continuation message
+
+                    std::cout << "\n\nThere are no vaild taps with that port count.\n\n";
+                    std::cout << "Tap reccomendation based of changes has restarted.\n\n";
+
+                    // continue loop
+                    continue;
+                }
+
+                // initialize choice and start loop
+                int choice;
+                while (true)
+                {
+                    // display tap options by iterating through available vector
+                    std::cout << "\nAvailable taps:\n";
+                    for (size_t j = 0; j < available.size(); j++) 
+                    {
+                        std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
+                            << available[j].max_insertion_loss << " dB)\n";
+                    }
+                    
+                    std::cout << "\nChoose tap: ";
+                    std::cin >> choice;
+
+                    // if the user enters an invalid number
+                    if (choice < 1 || choice > available.size()) 
+                    {
+                        // reset terminal and call feature menu again
+                        ResetTerminal();
+                        ChainCreationTitle();
+
+                        std::cout << "\n\nEnter port count (2/4/8): " << port_count;
+
+                        // tell user they chose an invalid tap value
+                        std::cout << "\n\nInvalid tap value. Retry.\n";
+
+                        // decrement so we are filling the same tap
+                        i--;
+
+                        // continue loop
+                        continue;
+                    }
+                    // break if passes
+                    break;
+                }
+
+                // fill main chain with the user choice
+                chain.push_back(available[choice-1]);
+
+                // clear available vector
+                available.clear();
+            }
+        }
+
+        std::cout << "\n\nCurrent Check: " << current_tap_value;
+        std::cout << "\n\nPrevious Check: " << previous_tap_value;
+
+        previous_tap_value = current_tap_value;
+    }
+
+    // pause for viewing updated chain
+    system("pause");
 }
 
 void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
@@ -588,10 +720,10 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     // proceed when user is done
     system("pause");
 
-    // reset for cleanliness
-    ResetTerminal();
+    // reccomend should start here //
 
-    // recall menu
+    // reset for cleanliness and recall menu
+    ResetTerminal();
     MenuTitle();
 }
 
@@ -747,13 +879,17 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     // clear available vector
     available.clear();
 
-    // proceed when user is done
+    // proceed when user is done replacing
     system("pause");
 
     // reset for cleanliness
     ResetTerminal();
 
-    // recall menu
+    // reccomend should start here //
+    ReplaceReccomend(chain, all_taps);
+
+    // reset and recall menu
+    ResetTerminal();
     MenuTitle();
 }
 
