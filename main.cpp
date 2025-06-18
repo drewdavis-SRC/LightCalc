@@ -1204,12 +1204,12 @@ Notes
             Need to start
                 GUI
 
-                Save footage entered from user for ease of use
-
                 Tap reccommendation
                     Could be standalone feature or inside insertion and replacement functions
 
             In-progress
+                Save footage entered from user for ease of use
+                    Implemented; Testing needs to take place
 
             Done
                 When a tap value dB is entered that's outside port count parameters, dont go back to port count selection
