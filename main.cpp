@@ -757,7 +757,7 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     MenuTitle();
 }
 
-void CalculateLoss(const vector<Tap>& chain, float main_light_level)
+vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vector<int>& FootageSave)
 {
     // call title
     LossCalculationTitle();
@@ -768,55 +768,164 @@ void CalculateLoss(const vector<Tap>& chain, float main_light_level)
     float bulkhead_loss = 0.3;
     float attenuation;
 
-    // iterate through curent chain
-    for (int i = 0; i < chain.size(); i++)
+    // ANSI escape codes
+    // 033[F moves the cursor back to the start of the line
+    // 033[K clears the line
+
+    // clearing table delineations for cleanliness
+    std::cout << "\033[F\033[K";
+    std::cout << "\033[F\033[K";
+
+    // initialize char for user input
+    char ans;
+    
+    while (true)
     {
-        const Tap& t = chain[i];
+        std::cout << "Are you calculating for a new/updated/altered chain? (y/n): ";
+        std::cin >> ans;
 
-        // get footage from last point until this tap
-        std::cout << "Enter footage for tap " << i + 1 << ": ";
+        // get rid of question and recall title
+        ResetTerminal();
+        LossCalculationTitle();
 
-        // receive footage for tap
-        std::cin >> footage;
-        float footage_loss = 0.0001 * footage;
+        if (ans == 'y')
+        {
+            // clear footage save in case chain has been altered
+            if (!FootageSave.empty())
+            {
+                FootageSave.clear();
+            }
 
-        // ANSI escape codes
-        // 033[F moves the cursor back to the start of the line
-        // 033[K clears the line
-        std::cout << "\033[F\033[K";
+            // iterate through curent chain
+            for (int i = 0; i < chain.size(); i++)
+            {
+                const Tap& t = chain[i];
 
-        // reprint everything since the line was cleared
-        std::cout << i + 1;
-        std::cout << "        | ";
-        std::cout << t.port_count;
-        std::cout << "     | ";
-        std::cout << t.tap_value_db;
-        std::cout << "             | ";
-        std::cout << footage;
+                // get footage from last point until this tap
+                std::cout << "Enter footage for tap " << i + 1 << ": ";
 
-        // calculate the attenuation on the main light level from the footage loss
-        attenuation = main_light_level - footage_loss;
+                // receive footage for tap
+                std::cin >> footage;
+                FootageSave.insert(FootageSave.begin() + i, footage);
 
-        std::cout << "          | ";
-        std::cout << attenuation; // show the main level at the tap minus footage loss
-        std::cout << "                 | ";
-        std::cout << attenuation - t.max_drop_loss - splice_loss - bulkhead_loss; // calculate loss at the drop 
+                float footage_loss = 0.0001 * footage;
 
-        // update main level for loss between next tap and the insertion loss
-        main_light_level = attenuation - t.max_insertion_loss;
+                // ANSI escape codes
+                // 033[F moves the cursor back to the start of the line
+                // 033[K clears the line
+                std::cout << "\033[F\033[K";
 
-        std::cout << std::endl;
+                // print all table values
+                std::cout << i + 1;
+                std::cout << "        | ";
+                std::cout << t.port_count;
+                std::cout << "     | ";
+                std::cout << t.tap_value_db;
+                std::cout << "             | ";
+                std::cout << footage;
+
+                // calculate the attenuation on the main light level from the footage loss
+                attenuation = main_light_level - footage_loss;
+
+                std::cout << "          | ";
+                std::cout << attenuation; // show the main level at the tap minus footage loss
+                std::cout << "                 | ";
+                std::cout << attenuation - t.max_drop_loss - splice_loss - bulkhead_loss; // calculate loss at the drop 
+
+                // update main level for loss between next tap and the insertion loss
+                main_light_level = attenuation - t.max_insertion_loss;
+
+                std::cout << std::endl;
+            }
+
+            // wait for user to be done viewing
+            std::cout << std::endl;
+            system("pause");
+
+            // remove everything from terminal for cleanliness
+            ResetTerminal();
+
+            // recall menu
+            MenuTitle();
+        }
+
+        else if (ans == 'n')
+        {
+            if (FootageSave.empty())
+            {
+                ResetTerminal();
+                LossCalculationTitle();
+
+                // clearing table delineations for cleanliness
+                std::cout << "\033[F\033[K";
+                std::cout << "\033[F\033[K";
+
+                std::cout << "This is a new/altered chain.\n";
+                std::cout << "Please select 'y' before selecting 'n'.\n\n";
+                continue;
+            }
+
+            // iterate through curent chain
+            for (int i = 0; i < chain.size(); i++)
+            {
+                const Tap& t = chain[i];
+
+                footage = FootageSave[i];
+
+                float footage_loss = 0.0001 * footage;
+
+                // print values
+                std::cout << i + 1;
+                std::cout << "        | ";
+                std::cout << t.port_count;
+                std::cout << "     | ";
+                std::cout << t.tap_value_db;
+                std::cout << "             | ";
+                std::cout << footage;
+
+                // calculate the attenuation on the main light level from the footage loss
+                attenuation = main_light_level - footage_loss;
+
+                std::cout << "          | ";
+                std::cout << attenuation; // show the main level at the tap minus footage loss
+                std::cout << "                 | ";
+                std::cout << attenuation - t.max_drop_loss - splice_loss - bulkhead_loss; // calculate loss at the drop 
+
+                // update main level for loss between next tap and the insertion loss
+                main_light_level = attenuation - t.max_insertion_loss;
+
+                std::cout << std::endl;
+            }
+
+            // wait for user to be done viewing
+            std::cout << std::endl;
+            system("pause");
+
+            // remove everything from terminal for cleanliness
+            ResetTerminal();
+
+            // recall menu
+            MenuTitle();
+        }
+
+        else
+        {
+            ResetTerminal();
+            LossCalculationTitle();
+
+            // clearing table delineations for cleanliness
+            std::cout << "\033[F\033[K";
+            std::cout << "\033[F\033[K";
+
+            std::cout << "Invlaid entry. Try again.\n\n";
+            continue;
+        }
+
+        // leave once user correctly chooses
+        break;
     }
 
-    // wait for user to be done viewing
-    std::cout << std::endl;
-    system("pause");
-
-    // remove everything from terminal for cleanliness
-    ResetTerminal();
-
-    // recall menu
-    MenuTitle();
+    return FootageSave;
 }
 
 void LightTable(const vector <Tap>& chain)
@@ -899,6 +1008,7 @@ int main()
     // initalize all taps and chain for the user
     vector<Tap> all_taps = populateTaps();
     vector<Tap> current_chain;
+    vector<int> FootageSave;
     
     // intialize menu choice
     int choice;
@@ -1020,7 +1130,7 @@ int main()
             {
                 // reset for cleanliness and call func
                 ResetTerminal();
-                CalculateLoss(current_chain, main_light_level);
+                CalculateLoss(current_chain, main_light_level, FootageSave);
             }
         }
 
@@ -1058,13 +1168,15 @@ int main()
 
 /*
 Notes
+    This is made to compile on windows systems only
+
     Issues:
         Fixed:
             Insertion is replacing a current tap instead of inserting in between
 
             View Chain
-            Needs to be handled to show until user wants to proceed,
-            reset terminal, then proceed
+                Needs to be handled to show until user wants to proceed,
+                reset terminal, then proceed
 
             Invalid choice on menu
                 Shows it's invalid -> Sleep -> ResetTerminal
