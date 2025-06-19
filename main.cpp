@@ -171,7 +171,7 @@ void TapReplacementTaps(vector <Tap>& chain)
         std::cout << i + 1;
         std::cout << "        | ";
         std::cout << t.port_count;
-        std::cout << " dB  | ";        
+        std::cout << "     | ";        
         std::cout << t.tap_value_db;
         std::cout << " dB    | ";
         std::cout << t.max_insertion_loss;
@@ -223,7 +223,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             ChainCreationTitle();
 
             // wrong msg
-            std::cout << "\n\nChain size must be 2 or larger. Retry.";
+            std::cout << "\n\nERROR: Chain size must be 2 or larger. Retry.";
             continue;
         }
         // break if passes
@@ -270,7 +270,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
             std::cout << "\n\nEnter number of taps in chain: " << num_taps;
 
-            std::cout << "\n\nThere are no vaild taps with that port count.";
+            std::cout << "\n\nERROR: There are no vaild taps with that port count.";
 
             // decrement i so we go until we correctly fill the current tap
             i--;
@@ -278,6 +278,12 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             // continue loop
             continue;
         }
+
+        ResetTerminal();
+        ChainCreationTitle();
+        std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+        std::cout << "\n\n==== Tap " << i + 1 << "/" << num_taps << " ====\n";
+        std::cout << "Enter port count (2/4/8): " << port_count << std::endl;
 
         // initialize choice and start loop
         int choice;
@@ -301,13 +307,13 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
                 ResetTerminal();
                 ChainCreationTitle();
 
-                std::cout << "\n\nEnter port count (2/4/8): " << port_count;
+                std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+
+                std::cout << "\n\n==== Tap " << i + 1 << "/" << num_taps << " ====\n";
+                std::cout << "Enter port count (2/4/8): " << port_count;
 
                 // tell user they chose an invalid tap value
-                std::cout << "\n\nInvalid tap value. Retry.\n";
-
-                // decrement so we are filling the same tap
-                i--;
+                std::cout << "\n\nERROR: Invalid tap value. Retry.\n";
 
                 // continue loop
                 continue;
@@ -325,6 +331,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         // reset the terminal and call the title again so we dont scroll on the terminal
         ResetTerminal();
         ChainCreationTitle();
+        std::cout << "\n\nEnter number of taps in chain: " << num_taps;
     }
 
     // reset terminal and return the chain the user will be seeing
@@ -431,25 +438,29 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
     std::cout << "\033[F\033[K";
 
     // continuation message
-    std::cout << "Tap reccomendation based of changes has begun.\n\n";
+    std::cout << "Checking chain for tap value and light level problems.";
+    sleep(1);
+    std::cout << ".\n";
+    sleep(1);
 
     // reshow chain
-    std::cout << "\n\nCurrent updated chain:";
+    std::cout << "\nCurrent updated chain:";
     std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
     std::cout << "--------------------------------------------------------------------\n";
     TapReplacementTaps(chain);
 
-    // replace logic
+    // initializations to track tap values
     int current_tap_value;
     int previous_tap_value;
 
+    // replace logic
     for (int i = 0; i < chain.size(); i++)
     {
         const Tap& t = chain[i];
 
         current_tap_value = t.tap_value_db;
 
-        if (current_tap_value >= previous_tap_value)
+        if (current_tap_value > previous_tap_value)
         {
             std::cout << "\nChanges need to be made!";
             std::cout << "\nTap " << i + 1 << " has a tap value of " << current_tap_value << " when the previous tap value is " << previous_tap_value << ".";
@@ -461,7 +472,7 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                 
                 // select port count of tap
                 int port_count;
-                std::cout << "Enter port count (2/4/8): ";
+                std::cout << "Enter port count for replacement tap (2/4/8): ";
                 std::cin >> port_count;
                 
                 // create new vector and fill it with taps of the selected port count
@@ -488,10 +499,16 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                     std::cout << "\033[F\033[K";
                     std::cout << "\033[F\033[K";
 
+                    // reshow chain with 'current updated'
+                    std::cout << "\nCurrent updated chain:";
+                    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
+                    std::cout << "--------------------------------------------------------------------\n";
+                    TapReplacementTaps(chain);
+
                     // continuation message
 
-                    std::cout << "\n\nThere are no vaild taps with that port count.\n\n";
-                    std::cout << "Tap reccomendation based of changes has restarted.\n\n";
+                    std::cout << "\nERROR: There are no vaild taps with that port count.\n\n";
+                    std::cout << "Chain integrity check has restarted.";
 
                     // continue loop
                     continue;
@@ -505,8 +522,11 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                     std::cout << "\nAvailable taps:\n";
                     for (size_t j = 0; j < available.size(); j++) 
                     {
+                        if (available[j].tap_value_db <= previous_tap_value)
+                        {
                         std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
                             << available[j].max_insertion_loss << " dB)\n";
+                        }
                     }
                     
                     std::cout << "\nChoose tap: ";
@@ -519,10 +539,10 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                         ResetTerminal();
                         ChainCreationTitle();
 
-                        std::cout << "\n\nEnter port count (2/4/8): " << port_count;
-
                         // tell user they chose an invalid tap value
-                        std::cout << "\n\nInvalid tap value. Retry.\n";
+                        std::cout << "\n\nERROR: Invalid tap value. Retry.\n";
+
+                        std::cout << "\n\nEnter port count (2/4/8): " << port_count;
 
                         // decrement so we are filling the same tap
                         i--;
@@ -539,16 +559,24 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
 
                 // clear available vector
                 available.clear();
+                
+                // leave when replace is done
+                break;
             }
         }
 
-        std::cout << "\n\nCurrent Check: " << current_tap_value;
-        std::cout << "\n\nPrevious Check: " << previous_tap_value;
+        // showing tap val checks to terminal for logic work
+        // std::cout << "\n\nCurrent Check: " << current_tap_value;
+        // std::cout << "\n\nPrevious Check: " << previous_tap_value;
 
         previous_tap_value = current_tap_value;
     }
 
+    // message for chain is acceptable
+    std::cout << "\nChain is up to standard.\n";
+
     // pause for viewing updated chain
+    std::cout << std::endl;
     system("pause");
 }
 
@@ -1132,7 +1160,7 @@ int main()
             MainLightQuestion();
 
             // error msg and continue loop
-            std::cout << "\nMain light levels must be greater than 1 and less than 3.5.\n";
+            std::cout << "\nERROR: Main light levels must be greater than 1 and less than 3.5.\n";
             continue;
         }
         // break if passes
