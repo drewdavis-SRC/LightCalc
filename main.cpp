@@ -204,18 +204,23 @@ void LightTableTitle()
 
 vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 {
+    // call title
     ChainCreationTitle();
 
     // initialize chain to store user selection
     vector<Tap> chain;
 
-    // initialize and receive number of taps in the chain for iteration
+    // initialize int to store number of desired taps
     int num_taps;
+
+    // start while loop to ask until desired output
     while (true)
     {
+        // ask for and receive number of taps in the chain for iteration
         std::cout << "\n\nEnter number of taps in chain: ";
         std::cin >> num_taps;
 
+        // make sure chain isnt smaller than 2
         if (num_taps < 2)
         {
             // reset terminal and call title again to display error above prompt
@@ -226,7 +231,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             std::cout << "\n\nERROR: Chain size must be 2 or larger. Retry.";
             continue;
         }
-        // break if passes
+        // break desired input is given
         break;
     }
     // reset to save space in terminal
@@ -237,6 +242,10 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
     // reprint user choice
     std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+
+    // initialize ints to track user choice of tap to filter options through chain creation
+    int current_tap_value;
+    int previous_tap_value = 21; // start previous at 21 to be sure we're showing 21 db taps to start
 
     // create taps for the amount entered
     for (int i = 0; i < num_taps; i++)
@@ -252,7 +261,6 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         
         // create new vector and fill it with taps of the selected port count
         vector<Tap> available;
-
         for (const Tap& t : all_taps) 
         {
             if (t.port_count == port_count)
@@ -272,20 +280,23 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
             std::cout << "\n\nERROR: There are no vaild taps with that port count.";
 
-            // decrement i so we go until we correctly fill the current tap
+            // decrement i so we go until we correctly fill the correct element in the vector
             i--;
 
             // continue loop
             continue;
         }
 
+        // reset for cleanliness and call title
         ResetTerminal();
         ChainCreationTitle();
+
+        // reprint user inputs and the tap they're filling
         std::cout << "\n\nEnter number of taps in chain: " << num_taps;
         std::cout << "\n\n==== Tap " << i + 1 << "/" << num_taps << " ====\n";
         std::cout << "Enter port count (2/4/8): " << port_count << std::endl;
 
-        // initialize choice and start loop
+        // initialize choice and start loop for desired input
         int choice;
         while (true)
         {
@@ -293,8 +304,13 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             std::cout << "\nAvailable taps:\n";
             for (size_t j = 0; j < available.size(); j++) 
             {
-                std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
-                    << available[j].max_insertion_loss << " dB)\n";
+                // only show taps that are less than or equal the previous tap db value for chain integrity 
+                if (available[j].tap_value_db <= previous_tap_value)
+                {
+                    // output taps
+                    std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
+                        << available[j].max_insertion_loss << " dB)\n";
+                }
             }
             
             std::cout << "\nChoose tap: ";
@@ -324,6 +340,7 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
         // fill main chain with the user choice
         chain.push_back(available[choice-1]);
+        current_tap_value = available[i].tap_value_db;
 
         // clear available vector
         available.clear();
@@ -332,6 +349,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         ResetTerminal();
         ChainCreationTitle();
         std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+
+        previous_tap_value = current_tap_value;
     }
 
     // reset terminal and return the chain the user will be seeing
@@ -451,7 +470,7 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
 
     // initializations to track tap values
     int current_tap_value;
-    int previous_tap_value;
+    int previous_tap_value = 0;
 
     // replace logic
     for (int i = 0; i < chain.size(); i++)
@@ -468,7 +487,7 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
             while (true)
             {
                 // tell user which tap they're creating in the chain
-                std::cout << "\n\n==== Replacing Tap " << i + 1 << " ====\n";
+                std::cout << "\n\n==== Fixing Tap " << i + 1 << " ====\n";
                 
                 // select port count of tap
                 int port_count;
