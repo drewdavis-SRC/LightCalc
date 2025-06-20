@@ -793,6 +793,8 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
     float splice_loss = 0.06 * 2;
     float bulkhead_loss = 0.3;
     float attenuation;
+    char ans;
+    int size_check = 0;
 
     // ANSI escape codes
     // 033[F moves the cursor back to the start of the line
@@ -801,9 +803,6 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
     // clearing table delineations for cleanliness
     std::cout << "\033[F\033[K";
     std::cout << "\033[F\033[K";
-
-    // initialize char for user input
-    char ans;
     
     while (true)
     {
@@ -816,6 +815,21 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
 
         if (ans == 'y')
         {
+            // make sure we dont do calculations on a chain that hasn't been altered
+            if (FootageSave.size() == size_check)
+            {
+                ResetTerminal();
+                LossCalculationTitle();
+
+                // clearing table delineations for cleanliness
+                std::cout << "\033[F\033[K";
+                std::cout << "\033[F\033[K";
+
+                std::cout << "ERROR: This chain has not been changed since the last calculation.\n";
+                std::cout << "Please alter or clear the chain first.\n\n";
+                continue;
+            }
+
             // clear footage save in case chain has been altered
             if (!FootageSave.empty())
             {
@@ -862,8 +876,10 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 main_light_level = attenuation - t.max_insertion_loss;
 
                 std::cout << std::endl;
-            }
 
+                // update size check
+                size_check = size_check + 1;
+            }
             // wait for user to be done viewing
             std::cout << std::endl;
             system("pause");
@@ -886,7 +902,7 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 std::cout << "\033[F\033[K";
                 std::cout << "\033[F\033[K";
 
-                std::cout << "This is a new/altered chain.\n";
+                std::cout << "ERROR: This is a new/altered chain.\n";
                 std::cout << "Please select 'y' before selecting 'n'.\n\n";
                 continue;
             }
@@ -921,6 +937,9 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 main_light_level = attenuation - t.max_insertion_loss;
 
                 std::cout << std::endl;
+
+                // update size check
+                size_check = size_check + 1;
             }
 
             // wait for user to be done viewing
