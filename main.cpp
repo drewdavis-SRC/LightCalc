@@ -1376,6 +1376,15 @@ Notes
             Chain creation clear message needs to be below chain creation title
         
         Not Fixed:
+            For large chains, users should not be able to select a port count that does not have any valid taps
+                Needs to have a message that shows X port count is not available because the chain has gone past the min db value
+                needed to use that port
+                Needs to remove the port option from the selection
+                EX: Tap db values have gone underneath 11, so 8 port should not be shown or available to choose;
+                    Same goes for 4 port taps; when underneath 7, remove 4 port option
+                Currently, checking previous db values filters out taps when choosing a port in this manner, but the available
+                vector is empty and shows nothing.
+
             Terminal reset has problems with not functioning correctly when zooming in
             and when what's being written makes the terminal scroll
                 ResetTerminal() needs to just reset everything written. look into behavior of function and library
