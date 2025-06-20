@@ -243,9 +243,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
     // reprint user choice
     std::cout << "\n\nEnter number of taps in chain: " << num_taps;
 
-    // initialize ints to track user choice of tap to filter options through chain creation
-    int current_tap_value;
-    int previous_tap_value = 21; // start previous at 21 to be sure we're showing 21 db taps to start
+    // initialize tracker for user choice of tap to filter options through chain creation
+    int previous_tap_value = 21; // start previous at 21 to be sure we're showing all taps to start
 
     // create taps for the amount entered
     for (int i = 0; i < num_taps; i++)
@@ -266,6 +265,42 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             if (t.port_count == port_count)
             {
                 available.push_back(t);
+            }
+
+            if (available[i].port_count == 4 && previous_tap_value < 11)
+            {
+                // reset terminal and call title to make error message be uniform
+                ResetTerminal();
+                ChainCreationTitle();
+
+                std::cout << "\n\nERROR: The previous tap's dB level is too low to use that port.";
+
+                // decrement i so we go until we correctly fill the correct element in the vector
+                i--;
+
+                // clear available vector
+                available.clear();
+
+                // continue loop
+                continue;
+            }
+
+            if (available[i].port_count == 8 && previous_tap_value < 7)
+            {
+                // reset terminal and call title to make error message be uniform
+                ResetTerminal();
+                ChainCreationTitle();
+
+                std::cout << "\n\nERROR: The previous tap's dB level is too low to use that port.";
+
+                // decrement i so we go until we correctly fill the correct element in the vector
+                i--;
+
+                // clear available vector
+                available.clear();
+
+                // continue loop
+                continue;
             }
         }
 
@@ -340,7 +375,11 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
         // fill main chain with the user choice
         chain.push_back(available[choice-1]);
-        current_tap_value = available[i].tap_value_db;
+
+        // grab tap db value for checks
+        previous_tap_value = available[i].tap_value_db;
+
+        std::cout << "Check: " << previous_tap_value;
 
         // clear available vector
         available.clear();
@@ -349,8 +388,6 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         ResetTerminal();
         ChainCreationTitle();
         std::cout << "\n\nEnter number of taps in chain: " << num_taps;
-
-        previous_tap_value = current_tap_value;
     }
 
     // reset terminal and return the chain the user will be seeing
