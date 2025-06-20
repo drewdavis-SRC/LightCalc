@@ -470,7 +470,7 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
 
     // initializations to track tap values
     int current_tap_value;
-    int previous_tap_value = 0;
+    int previous_tap_value = 21; // make 21 so initial check does not make you replace first tap
 
     // replace logic
     for (int i = 0; i < chain.size(); i++)
