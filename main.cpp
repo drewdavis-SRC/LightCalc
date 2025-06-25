@@ -266,42 +266,50 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             {
                 available.push_back(t);
             }
+        }
 
-            if (available[i].port_count == 4 && previous_tap_value < 11)
+        if (port_count == 8 && previous_tap_value <= 10)
+        {
+            // reset terminal and call title to make error message be uniform
+            ResetTerminal();
+            ChainCreationTitle();
+
+            std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+
+            std::cout << "\n\nERROR: The previous tap's dB level is too low to use this port count. ";
+            
+            if (previous_tap_value <= 6)
             {
-                // reset terminal and call title to make error message be uniform
-                ResetTerminal();
-                ChainCreationTitle();
-
-                std::cout << "\n\nERROR: The previous tap's dB level is too low to use that port.";
-
-                // decrement i so we go until we correctly fill the correct element in the vector
-                i--;
-
-                // clear available vector
-                available.clear();
-
-                // continue loop
-                continue;
+                std::cout << "Please use a 2 port tap.";
             }
 
-            if (available[i].port_count == 8 && previous_tap_value < 7)
+            else
             {
-                // reset terminal and call title to make error message be uniform
-                ResetTerminal();
-                ChainCreationTitle();
-
-                std::cout << "\n\nERROR: The previous tap's dB level is too low to use that port.";
-
-                // decrement i so we go until we correctly fill the correct element in the vector
-                i--;
-
-                // clear available vector
-                available.clear();
-
-                // continue loop
-                continue;
+                std::cout << "Please use a 2 or 4 port tap.";
             }
+
+            // decrement i so we go until we correctly fill the correct element in the vector
+            i--;
+
+            // continue loop
+            continue;
+        }
+
+        if (port_count == 4 && previous_tap_value <= 6)
+        {
+            // reset terminal and call title to make error message be uniform
+            ResetTerminal();
+            ChainCreationTitle();
+
+            std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+
+            std::cout << "\n\nERROR: The previous tap's dB level is too low to use this port count. Please use a 2 port tap.";
+
+            // decrement i so we go until we correctly fill the correct element in the vector
+            i--;
+
+            // continue loop
+            continue;
         }
 
         // if the available chian is empty, show in terminal and tell user they picked an invalid port count
@@ -333,6 +341,9 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
         // initialize choice and start loop for desired input
         int choice;
+
+        // counter for filtered taps to make available tap selecction begin at 1
+        int passed_taps = 0;
         while (true)
         {
             // display tap options by iterating through available vector
@@ -343,16 +354,23 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
                 if (available[j].tap_value_db <= previous_tap_value)
                 {
                     // output taps
-                    std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
+                    std::cout << j + 1 - passed_taps << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
                         << available[j].max_insertion_loss << " dB)\n";
+                }
+
+                // only update passed taps if we pass through output if statement
+                else
+                {
+                    passed_taps = passed_taps + 1;
                 }
             }
             
+            // get tap from user
             std::cout << "\nChoose tap: ";
             std::cin >> choice;
 
             // if the user enters an invalid number
-            if (choice < 1 || choice > available.size()) 
+            if (choice < 1 || choice > available.size() - passed_taps) 
             {
                 // reset terminal and call feature menu again
                 ResetTerminal();
@@ -374,12 +392,11 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         }
 
         // fill main chain with the user choice
-        chain.push_back(available[choice-1]);
+        // remember to subtract the filtered taps
+        chain.push_back(available[choice - 1 + passed_taps]);
 
         // grab tap db value for checks
-        previous_tap_value = available[i].tap_value_db;
-
-        std::cout << "Check: " << previous_tap_value;
+        previous_tap_value = chain[i].tap_value_db;
 
         // clear available vector
         available.clear();
