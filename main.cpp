@@ -384,6 +384,9 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
                 // tell user they chose an invalid tap value
                 std::cout << "\n\nERROR: Invalid tap value. Retry.\n";
 
+                // set passed taps back to 0 so we arent off the vector from not exiting while loop
+                passed_taps = 0;
+
                 // continue loop
                 continue;
             }
