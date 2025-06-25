@@ -243,9 +243,8 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
     // reprint user choice
     std::cout << "\n\nEnter number of taps in chain: " << num_taps;
 
-    // initialize ints to track user choice of tap to filter options through chain creation
-    int current_tap_value;
-    int previous_tap_value = 21; // start previous at 21 to be sure we're showing 21 db taps to start
+    // initialize tracker for user choice of tap to filter options through chain creation
+    int previous_tap_value = 21; // start previous at 21 to be sure we're showing all taps to start
 
     // create taps for the amount entered
     for (int i = 0; i < num_taps; i++)
@@ -267,6 +266,50 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             {
                 available.push_back(t);
             }
+        }
+
+        if (port_count == 8 && previous_tap_value <= 10)
+        {
+            // reset terminal and call title to make error message be uniform
+            ResetTerminal();
+            ChainCreationTitle();
+
+            std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+
+            std::cout << "\n\nERROR: The previous tap's dB level is too low to use this port count. ";
+            
+            if (previous_tap_value <= 6)
+            {
+                std::cout << "Please use a 2 port tap.";
+            }
+
+            else
+            {
+                std::cout << "Please use a 2 or 4 port tap.";
+            }
+
+            // decrement i so we go until we correctly fill the correct element in the vector
+            i--;
+
+            // continue loop
+            continue;
+        }
+
+        if (port_count == 4 && previous_tap_value <= 6)
+        {
+            // reset terminal and call title to make error message be uniform
+            ResetTerminal();
+            ChainCreationTitle();
+
+            std::cout << "\n\nEnter number of taps in chain: " << num_taps;
+
+            std::cout << "\n\nERROR: The previous tap's dB level is too low to use this port count. Please use a 2 port tap.";
+
+            // decrement i so we go until we correctly fill the correct element in the vector
+            i--;
+
+            // continue loop
+            continue;
         }
 
         // if the available chian is empty, show in terminal and tell user they picked an invalid port count
@@ -298,6 +341,9 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
 
         // initialize choice and start loop for desired input
         int choice;
+
+        // counter for filtered taps to make available tap selecction begin at 1
+        int passed_taps = 0;
         while (true)
         {
             // display tap options by iterating through available vector
@@ -308,16 +354,23 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
                 if (available[j].tap_value_db <= previous_tap_value)
                 {
                     // output taps
-                    std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
+                    std::cout << j + 1 - passed_taps << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
                         << available[j].max_insertion_loss << " dB)\n";
+                }
+
+                // only update passed taps if we pass through output if statement
+                else
+                {
+                    passed_taps = passed_taps + 1;
                 }
             }
             
+            // get tap from user
             std::cout << "\nChoose tap: ";
             std::cin >> choice;
 
             // if the user enters an invalid number
-            if (choice < 1 || choice > available.size()) 
+            if (choice < 1 || choice > available.size() - passed_taps) 
             {
                 // reset terminal and call feature menu again
                 ResetTerminal();
@@ -339,8 +392,11 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         }
 
         // fill main chain with the user choice
-        chain.push_back(available[choice-1]);
-        current_tap_value = available[i].tap_value_db;
+        // remember to subtract the filtered taps
+        chain.push_back(available[choice - 1 + passed_taps]);
+
+        // grab tap db value for checks
+        previous_tap_value = chain[i].tap_value_db;
 
         // clear available vector
         available.clear();
@@ -349,8 +405,6 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
         ResetTerminal();
         ChainCreationTitle();
         std::cout << "\n\nEnter number of taps in chain: " << num_taps;
-
-        previous_tap_value = current_tap_value;
     }
 
     // reset terminal and return the chain the user will be seeing
@@ -950,6 +1004,8 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
     float splice_loss = 0.06 * 2;
     float bulkhead_loss = 0.3;
     float attenuation;
+    char ans;
+    int size_check = 0;
 
     // ANSI escape codes
     // 033[F moves the cursor back to the start of the line
@@ -958,9 +1014,6 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
     // clearing table delineations for cleanliness
     std::cout << "\033[F\033[K";
     std::cout << "\033[F\033[K";
-
-    // initialize char for user input
-    char ans;
     
     while (true)
     {
@@ -973,6 +1026,21 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
 
         if (ans == 'y')
         {
+            // make sure we dont do calculations on a chain that hasn't been altered
+            if (FootageSave.size() == size_check)
+            {
+                ResetTerminal();
+                LossCalculationTitle();
+
+                // clearing table delineations for cleanliness
+                std::cout << "\033[F\033[K";
+                std::cout << "\033[F\033[K";
+
+                std::cout << "ERROR: This chain has not been changed since the last calculation.\n";
+                std::cout << "Please alter or clear the chain first.\n\n";
+                continue;
+            }
+
             // clear footage save in case chain has been altered
             if (!FootageSave.empty())
             {
@@ -1019,8 +1087,10 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 main_light_level = attenuation - t.max_insertion_loss;
 
                 std::cout << std::endl;
-            }
 
+                // update size check
+                size_check = size_check + 1;
+            }
             // wait for user to be done viewing
             std::cout << std::endl;
             system("pause");
@@ -1043,7 +1113,7 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 std::cout << "\033[F\033[K";
                 std::cout << "\033[F\033[K";
 
-                std::cout << "This is a new/altered chain.\n";
+                std::cout << "ERROR: This is a new/altered chain.\n";
                 std::cout << "Please select 'y' before selecting 'n'.\n\n";
                 continue;
             }
@@ -1078,6 +1148,9 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 main_light_level = attenuation - t.max_insertion_loss;
 
                 std::cout << std::endl;
+
+                // update size check
+                size_check = size_check + 1;
             }
 
             // wait for user to be done viewing
