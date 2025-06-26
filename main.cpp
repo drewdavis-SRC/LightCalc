@@ -526,20 +526,16 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
     TapReplacementTaps(chain);
 
     // initializations to track tap values
-    int current_tap_value;
     int previous_tap_value = 21; // make 21 so initial check does not make you replace first tap
+    int passed_taps = 0; // variable to track amount of taps that are filtered
 
     // replace logic
     for (int i = 0; i < chain.size(); i++)
     {
-        const Tap& t = chain[i];
-
-        current_tap_value = t.tap_value_db;
-
-        if (current_tap_value > previous_tap_value)
+        if (chain[i].tap_value_db > previous_tap_value)
         {
             std::cout << "\nChanges need to be made!";
-            std::cout << "\nTap " << i + 1 << " has a tap value of " << current_tap_value << " when the previous tap value is " << previous_tap_value << ".";
+            std::cout << "\nTap " << i + 1 << " has a tap value of " << chain[i].tap_value_db << " when the previous tap value is " << previous_tap_value << ".";
 
             while (true)
             {
@@ -562,7 +558,71 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                     }
                 }
 
-                // if the available chian is empty, show in terminal and tell user they picked an invalid port count
+                if (port_count == 8 && previous_tap_value <= 10)
+                {
+                    // reset terminal and call title to make error message be uniform
+                    ResetTerminal();
+                    TapReplacementTitle();
+
+                    // get rid of table columns from title menu
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+
+                    // reshow chain
+                    std::cout << "\nCurrent updated chain:";
+                    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
+                    std::cout << "--------------------------------------------------------------------\n";
+                    TapReplacementTaps(chain);
+
+                    std::cout << "\n\nERROR: The previous tap's dB level is too low to use this port count. ";
+                    
+                    if (previous_tap_value <= 6)
+                    {
+                        std::cout << "Please use a 2 port tap.";
+                    }
+
+                    else
+                    {
+                        std::cout << "Please use a 2 or 4 port tap.";
+                    }
+
+                    // decrement i so we go until we correctly fill the correct element in the vector
+                    i--;
+
+                    // continue loop
+                    continue;
+                }
+
+                if (port_count == 4 && previous_tap_value <= 6)
+                {
+                    // reset terminal and call title to make error message be uniform
+                    ResetTerminal();
+                    TapReplacementTitle();
+
+                    // get rid of table columns from title menu
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+                    std::cout << "\033[F\033[K";
+
+                    // reshow chain
+                    std::cout << "\nCurrent updated chain:";
+                    std::cout << "\nPosition | Ports | Tap (dB) | Max Ins Loss (dB) | Max Drop Loss (dB)\n";
+                    std::cout << "--------------------------------------------------------------------\n";
+                    TapReplacementTaps(chain);
+
+                    std::cout << "\n\nERROR: The previous tap's dB level is too low to use this port count. Please use a 2 port tap.";
+
+                    // decrement i so we go until we correctly fill the correct element in the vector
+                    i--;
+
+                    // continue loop
+                    continue;
+                }
+
+                // if the available chain is empty, show in terminal and tell user they picked an invalid port count
                 if (available.empty()) 
                 {
                     // reset terminal and call title to make error message be uniform
@@ -600,8 +660,13 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                     {
                         if (available[j].tap_value_db <= previous_tap_value)
                         {
-                        std::cout << j + 1 << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
+                        std::cout << j + 1 - passed_taps << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
                             << available[j].max_insertion_loss << " dB)\n";
+                        }
+
+                        else
+                        {
+                            passed_taps = passed_taps + 1;
                         }
                     }
                     
@@ -609,7 +674,7 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                     std::cin >> choice;
 
                     // if the user enters an invalid number
-                    if (choice < 1 || choice > available.size()) 
+                    if (choice < 1 || choice > available.size() - passed_taps) 
                     {
                         // reset terminal and call feature menu again
                         ResetTerminal();
@@ -630,8 +695,7 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                     break;
                 }
 
-                // fill main chain with the user choice
-                chain.push_back(available[choice-1]);
+                // repalce tap logic
 
                 // clear available vector
                 available.clear();
@@ -640,12 +704,8 @@ void ReplaceReccomend (vector<Tap>& chain, const vector<Tap>& all_taps)
                 break;
             }
         }
-
-        // showing tap val checks to terminal for logic work
-        // std::cout << "\n\nCurrent Check: " << current_tap_value;
-        // std::cout << "\n\nPrevious Check: " << previous_tap_value;
-
-        previous_tap_value = current_tap_value;
+        // in case we dont do any changes, still update previous
+        previous_tap_value = chain[i].tap_value_db;
     }
 
     // message for chain is acceptable
