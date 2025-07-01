@@ -966,10 +966,7 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     }
 
     // grab previous tab db value
-    for (int i = 0; i <= position; i++)
-    {
-        current_tap_value = chain[i].tap_value_db;
-    }
+    current_tap_value = chain[position].tap_value_db;
 
     // grab current tap value
 
@@ -1082,7 +1079,8 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         std::cout << "\nRecommended taps:\n";
         for (size_t j = 0; j < available.size(); j++) 
         {
-            if (available[j].tap_value_db = current_tap_value && available[j].tap_value_db >= next_tap_value)
+            if (available[j].tap_value_db < previous_tap_value 
+                &&  available[j].tap_value_db >= next_tap_value)
             {
                 std::cout << j + 1 - passed_taps << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
                     << available[j].max_insertion_loss << " dB)\n";
