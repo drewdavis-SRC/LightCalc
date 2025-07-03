@@ -562,16 +562,10 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     int next_tap_value;
 
     // grab previous tab db value
-    for (int i = 0; i < position; i++)
-    {
-        previous_tap_value = chain[i].tap_value_db;
-    }
+    previous_tap_value = chain[position].tap_value_db;
 
     // grab next tap db value
-    for (int i = 0; i < position + 1; i++)
-    {
-        next_tap_value = chain[i].tap_value_db;
-    }
+    next_tap_value = chain[position + 1].tap_value_db;
 
     // grab current tab db value
     current_tap_value = chain[position].tap_value_db;
@@ -776,16 +770,10 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
     int next_tap_value;
 
     // grab previous tab db value
-    for (int i = 0; i < position; i++)
-    {
-        previous_tap_value = chain[i].tap_value_db;
-    }
+    previous_tap_value = chain[position].tap_value_db;
 
     // grab next tap db value
-    for (int i = 0; i < position + 2; i++)
-    {
-        next_tap_value = chain[i].tap_value_db;
-    }
+    next_tap_value = chain[position + 2].tap_value_db;
 
     // grab current tab db value
     current_tap_value = chain[position].tap_value_db;
