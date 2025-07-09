@@ -630,6 +630,24 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
             continue;
         }
 
+        // if available is empty, port count was wrong
+        if (available.empty()) 
+        {
+            // reset terminal and call everything above again
+            ResetTerminal();
+            TapReplacementTitle();
+            TapReplacementTaps(chain);
+
+            // show previous position that was chosen
+            std::cout << "\nReplace position (1 - " << chain.size() << "): " << position + 1 << "\n";
+
+            // wrong input message
+            std::cout << "\nERROR: No valid taps with that port count! Retry.\n";
+
+            // continue loop
+            continue;
+        }
+
         // reset terminal and call everything above again
         // this is to get rid of error messages
         ResetTerminal();
@@ -794,6 +812,50 @@ void ReplaceTap(vector<Tap>& chain, const vector<Tap>& all_taps)
                     available.push_back(t);
                 }
             }
+        }
+
+        if (port_count == 8 && previous_tap_value <= 10)
+        {
+            // clear available chain since we're calling it again
+            available.clear();
+
+            // reset terminal and call everything above again
+            // this is to get rid of error messages
+            ResetTerminal();
+            TapReplacementTitle();
+            TapReplacementTaps(chain);
+
+            std::cout << "\n\nERROR: The previous tap's dB level is too low to use this port count. ";
+            
+            if (previous_tap_value <= 6)
+            {
+                std::cout << "Please use a 2 port tap.";
+            }
+
+            else
+            {
+                std::cout << "Please use a 2 or 4 port tap.";
+            }
+
+            // continue loop
+            continue;
+        }
+
+        if (port_count == 4 && previous_tap_value <= 6)
+        {
+            // clear available chain since we're calling it again
+            available.clear();
+
+            // reset terminal and call everything above again
+            // this is to get rid of error messages
+            ResetTerminal();
+            TapReplacementTitle();
+            TapReplacementTaps(chain);
+
+            std::cout << "\n\nERROR: The previous tap's dB level is too low to use this port count. Please use a 2 port tap.";
+
+            // continue loop
+            continue;
         }
 
         // if available is empty, port count was wrong
