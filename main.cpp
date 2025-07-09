@@ -1418,14 +1418,13 @@ Notes
                     Same goes for 4 port taps; when underneath 7, remove 4 port option
                 Currently, checking previous db values filters out taps when choosing a port in this manner, but the available
                 vector is empty and shows nothing.
+
+            When using the replace funciton and replacing the tap at the end, the recommended is not showing everything below the current tap value
         
         Not Fixed:
             Terminal reset has problems with not functioning correctly when zooming in
             and when what's being written makes the terminal scroll
                 ResetTerminal() needs to just reset everything written. look into behavior of function and library
-
-            When using the replace funciton and replacing the tap at the end, the recommended is not showing everything below the current tap value
-
 
     Things to add:
         High Priority:
