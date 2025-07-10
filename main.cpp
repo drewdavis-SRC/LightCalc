@@ -351,11 +351,11 @@ vector<Tap> CreateNewChain(const vector<Tap>& all_taps)
             for (size_t j = 0; j < available.size(); j++) 
             {
                 // only show taps that are less than or equal the previous tap db value for chain integrity 
-                if (available[j].tap_value_db <= previous_tap_value)
+                if (available[i].tap_value_db <= previous_tap_value)
                 {
                     // output taps
-                    std::cout << j + 1 - passed_taps << ". " << available[j].tap_value_db << " dB (Max Insertion Loss: " 
-                        << available[j].max_insertion_loss << " dB)\n";
+                    std::cout << i + 1 - passed_taps << ". " << available[i].tap_value_db << " dB (Max Insertion Loss: " 
+                        << available[i].max_insertion_loss << " dB)\n";
                 }
 
                 // only update passed taps if we pass through output if statement
@@ -699,7 +699,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         break;
     }
     // initalize new variable that holds the choice
-    Tap new_tap = available[choice-1];
+    Tap new_tap = available[choice - 1];
 
     // update previous last tap if inserting at end
     if (inserting_at_end && !chain.empty()) 
@@ -725,8 +725,6 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
 
     // proceed when user is done
     system("pause");
-
-    // reccomend should start here //
 
     // reset for cleanliness and recall menu
     ResetTerminal();
