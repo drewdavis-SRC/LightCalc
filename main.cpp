@@ -671,7 +671,7 @@ void InsertTap(vector<Tap>& chain, const vector<Tap>& all_taps)
         for (size_t i = 0; i < available.size(); i++) 
         {
             std::cout << i + 1 << ". " << available[i].tap_value_db << " dB (Max Insertion Loss: " 
-                    << available[i].max_insertion_loss << " dB)\n";;
+                      << available[i].max_insertion_loss << " dB)\n";
         }
 
         std::cout << "\nChoose tap: ";
