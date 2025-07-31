@@ -999,6 +999,7 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 continue;
             }
 
+            // clear footagesave to make sure we are working with a clean slate for a new chain 
             FootageSave.clear();
 
             // iterate through curent chain
