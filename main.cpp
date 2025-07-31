@@ -963,7 +963,6 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
     float bulkhead_loss = 0.3;
     float attenuation;
     char ans;
-    int size_check = 0;
 
     // ANSI escape codes
     // 033[F moves the cursor back to the start of the line
@@ -975,7 +974,7 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
     
     while (true)
     {
-        std::cout << "Are you calculating for a new/updated/altered chain? (y/n): ";
+        std::cout << "Are you calculating for a new/altered chain? (y/n): ";
         std::cin >> ans;
 
         // get rid of question and recall title
@@ -985,7 +984,7 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
         if (ans == 'y')
         {
             // make sure we dont do calculations on a chain that hasn't been altered
-            if (FootageSave.size() == size_check)
+            if (!FootageSave.empty())
             {
                 ResetTerminal();
                 LossCalculationTitle();
@@ -997,12 +996,6 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 std::cout << "ERROR: This chain has not been changed since the last calculation.\n";
                 std::cout << "Please alter or clear the chain first.\n\n";
                 continue;
-            }
-
-            // clear footage save in case chain has been altered
-            if (!FootageSave.empty())
-            {
-                FootageSave.clear();
             }
 
             // iterate through curent chain
@@ -1045,9 +1038,6 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 main_light_level = attenuation - t.max_insertion_loss;
 
                 std::cout << std::endl;
-
-                // update size check
-                size_check = size_check + 1;
             }
             // wait for user to be done viewing
             std::cout << std::endl;
@@ -1106,9 +1096,6 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 main_light_level = attenuation - t.max_insertion_loss;
 
                 std::cout << std::endl;
-
-                // update size check
-                size_check = size_check + 1;
             }
 
             // wait for user to be done viewing
