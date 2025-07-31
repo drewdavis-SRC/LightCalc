@@ -476,7 +476,7 @@ void ViewChain(const vector<Tap>& chain, float main_light_level)
     MenuTitle();
 }
 
-void ClearChain(vector <Tap>& chain)
+void ClearChain(vector <Tap>& chain, vector<int>& FootageSave)
 {
     // call feature's title
     ClearChainTitle();
@@ -489,6 +489,7 @@ void ClearChain(vector <Tap>& chain)
 
     // clear taps in the chain
     chain.clear();
+    FootageSave.clear();
 
     // output the chain is clear
     std::cout << "\n\nChain is now clear.\n\n";
@@ -998,6 +999,8 @@ vector<int> CalculateLoss(const vector<Tap>& chain, float main_light_level, vect
                 continue;
             }
 
+            FootageSave.clear();
+
             // iterate through curent chain
             for (int i = 0; i < chain.size(); i++)
             {
@@ -1274,7 +1277,7 @@ int main()
             {
                 // reset for cleanliness and call func
                 ResetTerminal();
-                ClearChain(current_chain);
+                ClearChain(current_chain, FootageSave);
             }
         }
 
